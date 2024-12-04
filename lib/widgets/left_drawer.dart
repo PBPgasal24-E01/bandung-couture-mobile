@@ -2,7 +2,7 @@ import 'package:bandung_couture_mobile/constants/url.dart';
 import 'package:bandung_couture_mobile/screens/login.dart';
 import 'package:bandung_couture_mobile/screens/menu.dart';
 import 'package:bandung_couture_mobile/screens/pages.dart';
-import 'package:bandung_couture_mobile/screens/stores/stores.dart';
+import 'package:bandung_couture_mobile/screens/stores/stores_page.dart';
 import 'package:flutter/material.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
@@ -60,7 +60,7 @@ class LeftDrawer extends StatelessWidget {
           // Menu Product
           ListTile(
             leading: const Icon(Icons.category_outlined),
-            title: const Text('Product'),
+            title: const Text('Stores'),
             onTap: () {
               Navigator.pushReplacement(
                 context,

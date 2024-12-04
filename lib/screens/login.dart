@@ -99,7 +99,8 @@ class _LoginPageState extends State<LoginPage> {
                       String username = _usernameController.text;
                       String password = _passwordController.text;
 
-                      final response = await request.login('${URL.urlLink}auth/login/', {
+                      final response =
+                          await request.login('${URL.urlLink}auth/login/', {
                         'username': username,
                         'password': password,
                       });
