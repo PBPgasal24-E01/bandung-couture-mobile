@@ -2,6 +2,7 @@ import 'package:bandung_couture_mobile/constants/url.dart';
 import 'package:bandung_couture_mobile/screens/login.dart';
 import 'package:bandung_couture_mobile/screens/menu.dart';
 import 'package:bandung_couture_mobile/screens/pages.dart';
+import 'package:bandung_couture_mobile/screens/forum/forum.dart';
 import 'package:flutter/material.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
