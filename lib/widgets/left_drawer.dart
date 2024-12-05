@@ -3,6 +3,7 @@ import 'package:bandung_couture_mobile/screens/login.dart';
 import 'package:bandung_couture_mobile/screens/menu.dart';
 import 'package:bandung_couture_mobile/screens/pages.dart';
 import 'package:bandung_couture_mobile/screens/forum/forum.dart';
+import 'package:bandung_couture_mobile/screens/stores/stores_page.dart';
 import 'package:flutter/material.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
@@ -12,7 +13,7 @@ class LeftDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-     final request = context.watch<CookieRequest>();
+    final request = context.watch<CookieRequest>();
     return Drawer(
       child: ListView(
         children: [
@@ -60,12 +61,12 @@ class LeftDrawer extends StatelessWidget {
           // Menu Product
           ListTile(
             leading: const Icon(Icons.category_outlined),
-            title: const Text('Product'),
+            title: const Text('Stores'),
             onTap: () {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const ProductPage(),
+                  builder: (context) => const StoresPage(),
                 ),
               );
             },
@@ -114,8 +115,8 @@ class LeftDrawer extends StatelessWidget {
             leading: const Icon(Icons.logout),
             title: const Text('Logout'),
             onTap: () async {
-              final response = await request.logout(
-                "${URL.urlLink}auth/logout/");
+              final response =
+                  await request.logout("${URL.urlLink}auth/logout/");
               String message = response["message"];
 
               if (context.mounted) {
@@ -145,6 +146,3 @@ class LeftDrawer extends StatelessWidget {
     );
   }
 }
-
-
-

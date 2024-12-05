@@ -16,7 +16,7 @@ class _RegisterPageState extends State<RegisterPage> {
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
-  String? _userType;  // Variabel untuk tipe user
+  int? _userRole; // Variabel untuk tipe user
 
   @override
   Widget build(BuildContext context) {
@@ -116,8 +116,8 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                   const SizedBox(height: 12.0),
                   // Dropdown for user type
-                  DropdownButtonFormField<String>(
-                    value: _userType,
+                  DropdownButtonFormField<int>(
+                    value: _userRole,
                     decoration: const InputDecoration(
                       labelText: 'User Type',
                       border: OutlineInputBorder(
@@ -127,16 +127,16 @@ class _RegisterPageState extends State<RegisterPage> {
                           EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
                     ),
                     items: const [
-                      DropdownMenuItem(value: 'type1', child: Text('Visitor')),
-                      DropdownMenuItem(value: 'type2', child: Text('Contributor')),
+                      DropdownMenuItem(value: 1, child: Text('Visitor')),
+                      DropdownMenuItem(value: 2, child: Text('Contributor')),
                     ],
                     onChanged: (value) {
                       setState(() {
-                        _userType = value;
+                        _userRole = value;
                       });
                     },
                     validator: (value) {
-                      if (value == null || value.isEmpty) {
+                      if (value == null) {
                         return 'Please select a user type';
                       }
                       return null;
@@ -151,7 +151,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       String password2 = _confirmPasswordController.text;
 
                       // Check if user type is selected
-                      if (_userType == null || _userType!.isEmpty) {
+                      if (_userRole == null) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                             content: Text('Please select a user type.'),
@@ -167,7 +167,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           "username": username,
                           "password1": password1,
                           "password2": password2,
-                          "user_type": _userType,
+                          "role": _userRole,
                         }),
                       );
 
@@ -180,7 +180,8 @@ class _RegisterPageState extends State<RegisterPage> {
                           );
                           Navigator.pushReplacement(
                             context,
-                            MaterialPageRoute(builder: (context) => const LoginPage()),
+                            MaterialPageRoute(
+                                builder: (context) => const LoginPage()),
                           );
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
