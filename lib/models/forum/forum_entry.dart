@@ -9,57 +9,61 @@ List<Forum> forumFromJson(String str) => List<Forum>.from(json.decode(str).map((
 String forumToJson(List<Forum> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class Forum {
-    String model;
     String pk;
     Fields fields;
 
     Forum({
-        required this.model,
         required this.pk,
         required this.fields,
     });
 
     factory Forum.fromJson(Map<String, dynamic> json) => Forum(
-        model: json["model"],
         pk: json["pk"],
         fields: Fields.fromJson(json["fields"]),
     );
 
     Map<String, dynamic> toJson() => {
-        "model": model,
         "pk": pk,
         "fields": fields.toJson(),
     };
 }
 
 class Fields {
-    int user;
-    dynamic parent;
+    int id;
     String title;
     String details;
-    DateTime time;
+    String time;
+    String username;
+    String parent;
+    bool isAuthor;
 
     Fields({
-        required this.user,
-        required this.parent,
+        required this.id,
         required this.title,
         required this.details,
         required this.time,
+        required this.username,
+        required this.parent,
+        required this.isAuthor,
     });
 
     factory Fields.fromJson(Map<String, dynamic> json) => Fields(
-        user: json["user"],
-        parent: json["parent"],
+        id: json["id"],
         title: json["title"],
         details: json["details"],
-        time: DateTime.parse(json["time"]),
+        time: json["time"],
+        username: json["username"],
+        parent: json["parent"],
+        isAuthor: json["is_author"],
     );
 
     Map<String, dynamic> toJson() => {
-        "user": user,
-        "parent": parent,
+        "id": id,
         "title": title,
         "details": details,
-        "time": time.toIso8601String(),
+        "time": time,
+        "username": username,
+        "parent": parent,
+        "is_author": isAuthor,
     };
 }
