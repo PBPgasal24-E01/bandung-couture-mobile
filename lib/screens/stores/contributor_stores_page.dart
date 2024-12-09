@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:bandung_couture_mobile/widgets/left_drawer.dart';
 import 'package:bandung_couture_mobile/models/stores/store.dart';
+import 'package:bandung_couture_mobile/screens/stores/store_form.dart';
 import 'package:bandung_couture_mobile/constants/url.dart';
 import 'package:provider/provider.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
@@ -32,6 +33,34 @@ class ContributorStoresPage extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 20), // Space between title and button
+
+            Column(children: [
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  backgroundColor: Colors.black, // Button color
+                ),
+                child: const Text(
+                  "Add a Store",
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.white,
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const StoreFormPage()),
+                  );
+                },
+              ),
+
+              const SizedBox(height: 30), // Space between button and section
+            ]),
 
             // Store Section
             Expanded(

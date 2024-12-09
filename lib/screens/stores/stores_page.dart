@@ -29,7 +29,7 @@ class StoresPage extends StatelessWidget {
           children: [
             // Title Section
             const Text(
-              "Manage Your Stores",
+              "Stores",
               style: TextStyle(
                 fontSize: 24,
                 color: Colors.black87,
@@ -37,9 +37,8 @@ class StoresPage extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 20), // Space between title and button
-
             // Add Product Button
-            if (isContributor) //later: change to isContributor variable when not debug
+            if (isContributor)
               Column(children: [
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
