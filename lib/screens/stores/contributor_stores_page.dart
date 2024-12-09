@@ -1,20 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:bandung_couture_mobile/widgets/left_drawer.dart';
 import 'package:bandung_couture_mobile/models/stores/store.dart';
-import 'package:bandung_couture_mobile/screens/stores/contributor_stores_page.dart';
 import 'package:bandung_couture_mobile/constants/url.dart';
 import 'package:provider/provider.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 
-class StoresPage extends StatelessWidget {
-  const StoresPage({super.key});
+class ContributorStoresPage extends StatelessWidget {
+  const ContributorStoresPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final request = context.watch<CookieRequest>();
-
-    var isContributor = request.jsonData['role'] == 2;
-
     return Scaffold(
       appBar: AppBar(
         title: const Text("Stores"),
@@ -38,36 +33,6 @@ class StoresPage extends StatelessWidget {
             ),
             const SizedBox(height: 20), // Space between title and button
 
-            // Add Product Button
-            if (isContributor) //later: change to isContributor variable when not debug
-              Column(children: [
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    backgroundColor: Colors.black, // Button color
-                  ),
-                  child: const Text(
-                    "My Stores Contribution",
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.white,
-                    ),
-                  ),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const ContributorStoresPage()),
-                    );
-                  },
-                ),
-
-                const SizedBox(height: 30), // Space between button and section
-              ]),
-
             // Store Section
             Expanded(
               child: Container(
@@ -83,8 +48,7 @@ class StoresPage extends StatelessWidget {
                   ],
                 ),
                 padding: const EdgeInsets.all(16), // Padding inside the section
-                child:
-                    const StoresSection(), // Replace with your content widget
+                child: const ContributorStoresSection(),
               ),
             ),
           ],
@@ -94,16 +58,17 @@ class StoresPage extends StatelessWidget {
   }
 }
 
-class StoresSection extends StatefulWidget {
-  const StoresSection({super.key});
+class ContributorStoresSection extends StatefulWidget {
+  const ContributorStoresSection({super.key});
 
   @override
-  State<StoresSection> createState() => _StoresSectionState();
+  State<ContributorStoresSection> createState() =>
+      _ContributorStoresSectionState();
 }
 
-class _StoresSectionState extends State<StoresSection> {
+class _ContributorStoresSectionState extends State<ContributorStoresSection> {
   Future<List<Store>> fetchStores(CookieRequest request) async {
-    final response = await request.get('${URL.urlLink}stores/show-rest-all');
+    final response = await request.get('${URL.urlLink}stores/show-rest-own');
 
     // Melakukan decode response menjadi bentuk json
     var data = response;
