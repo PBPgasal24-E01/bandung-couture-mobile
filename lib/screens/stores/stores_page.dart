@@ -37,8 +37,8 @@ class StoresPage extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 20), // Space between title and button
-            // Add Product Button
-            if (isContributor)
+
+            if (true)
               Column(children: [
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
@@ -48,11 +48,14 @@ class StoresPage extends StatelessWidget {
                     ),
                     backgroundColor: Colors.black, // Button color
                   ),
-                  child: const Text(
-                    "My Stores Contribution",
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.white,
+                  child: const Padding(
+                    padding: EdgeInsets.only(left: 16, right: 16),
+                    child: Text(
+                      "My Stores Contribution",
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                   onPressed: () {
@@ -81,9 +84,8 @@ class StoresPage extends StatelessWidget {
                     ),
                   ],
                 ),
-                padding: const EdgeInsets.all(16), // Padding inside the section
-                child:
-                    const StoresSection(), // Replace with your content widget
+                padding: const EdgeInsets.all(16),
+                child: const StoresSection(),
               ),
             ),
           ],
