@@ -21,27 +21,6 @@ class PromoPage extends StatelessWidget {
   }
 }
 
-class WishlistPage extends StatelessWidget {
-  const WishlistPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Wishlist')),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Kamu menekan tombol Wishlist')),
-            );
-          },
-          child: const Text('Tekan untuk Wishlist'),
-        ),
-      ),
-    );
-  }
-}
-
 class ForumPage extends StatelessWidget {
   const ForumPage({super.key});
 
