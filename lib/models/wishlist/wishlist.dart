@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:bandung_couture_mobile/models/stores/store.dart';
 
 List<Wishlist> wishlistFromJson(String str) =>
     List<Wishlist>.from(json.decode(str).map((x) => Wishlist.fromJson(x)));
@@ -33,25 +32,46 @@ class Wishlist {
 }
 
 class WishlistFields {
-  int user;
-  Store store;
+  String brand;
+  String description;
+  String address;
+  String contactNumber;
+  String website;
+  String socialMedia;
+  List<int> categories;
   DateTime addedAt;
 
   WishlistFields({
-    required this.user,
-    required this.store,
+    required this.brand,
+    required this.description,
+    required this.address,
+    required this.contactNumber,
+    required this.website,
+    required this.socialMedia,
+    required this.categories,
     required this.addedAt,
   });
 
   factory WishlistFields.fromJson(Map<String, dynamic> json) => WishlistFields(
-        user: json["user"],
-        store: Store.fromJson(json["store"]), // Handle null store
-        addedAt: DateTime.parse(json["added_at"]),
+        brand: json["brand"],
+        description: json["description"],
+        address: json["address"],
+        contactNumber: json["contact_number"],
+        website: json["website"],
+        socialMedia: json["social_media"],
+        categories: List<int>.from(json["categories"].map((x) => x)),
+        addedAt: DateTime.parse(json["addedAt"]),
       );
 
   Map<String, dynamic> toJson() => {
-        "user": user,
-        "store": store.toJson(), // Menggunakan store.toJson untuk serialisasi
+        "brand": brand,
+        "description": description,
+        "address": address,
+        "contact_number": contactNumber,
+        "website": website,
+        "social_media": socialMedia,
+        "categories": List<dynamic>.from(categories
+            .map((x) => x)), // Menggunakan store.toJson untuk serialisasi
         "added_at": addedAt.toIso8601String(),
       };
 }

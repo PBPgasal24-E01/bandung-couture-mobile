@@ -1,10 +1,14 @@
 import 'package:bandung_couture_mobile/constants/url.dart';
 import 'package:bandung_couture_mobile/models/stores/store.dart';
+import 'package:bandung_couture_mobile/widgets/wishlistBtn.dart';
 import 'package:flutter/material.dart';
 import 'package:bandung_couture_mobile/widgets/left_drawer.dart';
 import 'package:bandung_couture_mobile/models/Wishlist/wishlist.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
+
+// problem error = fungsionalitas button
+// belum simpen store.id
 
 class WishlistPage extends StatelessWidget {
   const WishlistPage({super.key});
@@ -101,26 +105,26 @@ class _WishlistSectionState extends State<WishlistSection> {
     List<dynamic> data = response; // Pastikan tipe data di sini
     List<Wishlist> wishList = [];
 
-    try {
-      for (var d in data) {
-        if (d != null) {
-          final storeId = d["fields"]["store"];
-          final secondResponse =
-              await request.get('${URL.urlLink}stores/get-store/$storeId');
-          d["fields"]["store"] = secondResponse[0];
-          wishList.add(Wishlist.fromJson(d));
-        }
+    for (var d in data) {
+      if (d != null) {
+        final storeId = d["fields"]["store"];
+        final secondResponse =
+            await request.get('${URL.urlLink}stores/get-store/$storeId');
+        secondResponse[0]["fields"]["addedAt"] = d["fields"]["added_at"];
+        secondResponse[0]["model"] = d["model"];
+        secondResponse[0]["pk"] = d["pk"];
+        secondResponse[0]["fields"].remove("user");
+        print(secondResponse[0]);
+        wishList.add(Wishlist.fromJson(secondResponse[0]));
       }
-      return wishList;
-    } catch (e) {
-      print(e);
-      return [];
     }
+    return wishList;
   }
 
   @override
   Widget build(BuildContext context) {
     final request = context.watch<CookieRequest>();
+    var isVisitor = request.jsonData['role'] == 1;
     return FutureBuilder(
       future: getWishlist(request),
       builder: (context, AsyncSnapshot snapshot) {
@@ -226,6 +230,29 @@ class _WishlistSectionState extends State<WishlistSection> {
                           ),
                         ],
                       ),
+                      const SizedBox(height: 8),
+                      if (isVisitor)
+                        Align(
+                            alignment: Alignment.bottomRight,
+                            child: ElevatedButton(
+                              onPressed: () async {
+                                final response = await request.get(
+                                    '${URL.urlLink}wishlist/remove/${snapshot.data![index].pk}/');
+                                if (response['status'] == 'success') {
+                                  // If successful, remove the store from the list
+                                  setState(() {
+                                    snapshot.data!.removeAt(index);
+                                  });
+                                }
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.red, // Button color
+                              ),
+                              child: const Text(
+                                "Remove from Wishlist",
+                                style: const TextStyle(color: Colors.white),
+                              ),
+                            )),
                     ],
                   ),
                 ),
@@ -261,6 +288,7 @@ class _ReccomendedSectionState extends State<ReccomendedSection> {
 
   Widget build(BuildContext context) {
     final request = context.watch<CookieRequest>();
+    var isVisitor = request.jsonData['role'] == 1;
     return FutureBuilder(
       future: getAvailableStores(request),
       builder: (context, AsyncSnapshot snapshot) {
@@ -366,6 +394,26 @@ class _ReccomendedSectionState extends State<ReccomendedSection> {
                           ),
                         ],
                       ),
+                      const SizedBox(height: 8),
+                      if (isVisitor)
+                        Align(
+                            alignment: Alignment.bottomRight,
+                            child: ElevatedButton(
+                              onPressed: () async {
+                                final response = await request.get(
+                                    '${URL.urlLink}wishlist/add/${snapshot.data![index].pk}/');
+                                if (response['status'] == 'success') {
+                                  // to do implementation
+                                }
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.green, // Button color
+                              ),
+                              child: const Text(
+                                "Add to Wishlist",
+                                style: const TextStyle(color: Colors.white),
+                              ),
+                            )),
                     ],
                   ),
                 ),
