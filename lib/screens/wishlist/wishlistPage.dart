@@ -92,6 +92,7 @@ class _WishlistPageState extends State<WishlistPage> {
   @override
   Widget build(BuildContext context) {
     final request = context.watch<CookieRequest>();
+    var isContributor = request.jsonData['role'] == 2;
     return Scaffold(
       appBar: AppBar(
         title: const Text("Wishlist"),
@@ -115,37 +116,6 @@ class _WishlistPageState extends State<WishlistPage> {
             ),
             const SizedBox(height: 20), // Space between title and button
             Expanded(
-                child: Container(
-              decoration: BoxDecoration(
-                color: Colors.grey[100], // Light background for the section
-                borderRadius: BorderRadius.circular(10),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    blurRadius: 8,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              padding: const EdgeInsets.all(16), // Padding inside the section
-              child: WishlistSection(
-                wishlistItems: wishlistItems,
-                onUpdate: () => _refreshWishlist(request),
-              ),
-            )),
-            const SizedBox(
-                height:
-                    30), // Add space between WishlistSection and "Recommended Stores"
-            const Text(
-              "Recommended Stores",
-              style: TextStyle(
-                fontSize: 24,
-                color: Colors.black87,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 20), // Space between title and button
-            Expanded(
               child: Container(
                 decoration: BoxDecoration(
                   color: Colors.grey[100], // Light background for the section
@@ -159,13 +129,78 @@ class _WishlistPageState extends State<WishlistPage> {
                   ],
                 ),
                 padding: const EdgeInsets.all(16), // Padding inside the section
-                child: ReccomendedSection(
-                  storeItems: storeItems,
-                  onUpdate: () => _refreshRecommended(
-                      request), // Replace with your content widget
-                ),
+                child: !isContributor
+                    ? WishlistSection(
+                        wishlistItems: wishlistItems,
+                        onUpdate: () => _refreshWishlist(request),
+                      )
+                    : const Column(
+                        mainAxisAlignment: MainAxisAlignment
+                            .center, // Center content vertically
+                        crossAxisAlignment: CrossAxisAlignment
+                            .center, // Center content horizontally
+                        children: [
+                          Text(
+                            'Wishlist tidak berlaku untuk contributor',
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: Colors.black,
+                            ),
+                          ),
+                          SizedBox(height: 8),
+                        ],
+                      ),
               ),
             ),
+
+            const SizedBox(
+                height:
+                    30), // Add space between WishlistSection and "Recommended Stores"
+            const Text(
+              "Recommended Stores",
+              style: TextStyle(
+                fontSize: 24,
+                color: Colors.black87,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 20), // Space between title and button
+            Expanded(
+                child: Container(
+              decoration: BoxDecoration(
+                color: Colors.grey[100], // Light background for the section
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              padding: const EdgeInsets.all(16), // Padding inside the section
+              child: !isContributor
+                  ? ReccomendedSection(
+                      storeItems: storeItems,
+                      onUpdate: () => _refreshRecommended(request),
+                    ) // Replace with your content widget
+                  : const Column(
+                      mainAxisAlignment:
+                          MainAxisAlignment.center, // Center content vertically
+                      crossAxisAlignment: CrossAxisAlignment
+                          .center, // Center content horizontally
+                      children: [
+                        Text(
+                          'Wishlist tidak berlaku untuk contributor',
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Colors.black,
+                          ),
+                        ),
+                        SizedBox(height: 8),
+                      ],
+                    ),
+            ))
           ],
         ),
       ),
@@ -338,6 +373,7 @@ class ReccomendedSection extends StatelessWidget {
     required this.onUpdate,
   });
 
+  @override
   Widget build(BuildContext context) {
     if (storeItems.isEmpty) {
       // Handle empty wishlist

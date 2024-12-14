@@ -13,7 +13,6 @@ class StoresPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final request = context.watch<CookieRequest>();
-
     var isContributor = request.jsonData['role'] == 2;
 
     return Scaffold(
