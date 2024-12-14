@@ -1,6 +1,5 @@
 import 'package:bandung_couture_mobile/constants/url.dart';
 import 'package:bandung_couture_mobile/models/stores/store.dart';
-import 'package:bandung_couture_mobile/widgets/wishlistBtn.dart';
 import 'package:flutter/material.dart';
 import 'package:bandung_couture_mobile/widgets/left_drawer.dart';
 import 'package:bandung_couture_mobile/models/Wishlist/wishlist.dart';
@@ -113,8 +112,8 @@ class _WishlistSectionState extends State<WishlistSection> {
         secondResponse[0]["fields"]["addedAt"] = d["fields"]["added_at"];
         secondResponse[0]["model"] = d["model"];
         secondResponse[0]["pk"] = d["pk"];
+        secondResponse[0]["fields"]["storeID"] = d["fields"]["store"];
         secondResponse[0]["fields"].remove("user");
-        print(secondResponse[0]);
         wishList.add(Wishlist.fromJson(secondResponse[0]));
       }
     }
@@ -236,13 +235,17 @@ class _WishlistSectionState extends State<WishlistSection> {
                             alignment: Alignment.bottomRight,
                             child: ElevatedButton(
                               onPressed: () async {
-                                final response = await request.get(
-                                    '${URL.urlLink}wishlist/remove/${snapshot.data![index].pk}/');
-                                if (response['status'] == 'success') {
-                                  // If successful, remove the store from the list
-                                  setState(() {
-                                    snapshot.data!.removeAt(index);
-                                  });
+                                try {
+                                  final response = await request.get(
+                                      '${URL.urlLink}wishlist/remove_mob/${snapshot.data![index].pk}/');
+                                  if (response['status'] == 'success') {
+                                    // Jika berhasil, hapus store dari list
+                                    setState(() {
+                                      snapshot.data!.removeAt(index);
+                                    });
+                                  }
+                                } catch (e) {
+                                  print(e);
                                 }
                               },
                               style: ElevatedButton.styleFrom(
@@ -402,8 +405,8 @@ class _ReccomendedSectionState extends State<ReccomendedSection> {
                               onPressed: () async {
                                 final response = await request.get(
                                     '${URL.urlLink}wishlist/add/${snapshot.data![index].pk}/');
-                                if (response['status'] == 'success') {
-                                  // to do implementation
+                                if (response['message'] == 'added') {
+                                  setState(() {});
                                 }
                               },
                               style: ElevatedButton.styleFrom(

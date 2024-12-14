@@ -32,6 +32,7 @@ class Wishlist {
 }
 
 class WishlistFields {
+  int storeID;
   String brand;
   String description;
   String address;
@@ -42,6 +43,7 @@ class WishlistFields {
   DateTime addedAt;
 
   WishlistFields({
+    required this.storeID,
     required this.brand,
     required this.description,
     required this.address,
@@ -53,6 +55,7 @@ class WishlistFields {
   });
 
   factory WishlistFields.fromJson(Map<String, dynamic> json) => WishlistFields(
+        storeID: json["storeID"],
         brand: json["brand"],
         description: json["description"],
         address: json["address"],
@@ -64,6 +67,7 @@ class WishlistFields {
       );
 
   Map<String, dynamic> toJson() => {
+        "storeID": storeID,
         "brand": brand,
         "description": description,
         "address": address,
