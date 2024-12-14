@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:bandung_couture_mobile/widgets/left_drawer.dart';
 import 'package:bandung_couture_mobile/models/stores/store.dart';
@@ -41,15 +43,17 @@ class ContributorStoresPage extends StatelessWidget {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  backgroundColor: Colors.black, // Button color
+                  backgroundColor: Colors.black, // Button color,
                 ),
-                child: const Text(
-                  "Add a Store",
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.white,
-                  ),
-                ),
+                child: const Padding(
+                    padding: EdgeInsets.only(left: 16, right: 16),
+                    child: Text(
+                      "Add a Store",
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.white,
+                      ),
+                    )),
                 onPressed: () {
                   Navigator.pushReplacement(
                     context,
@@ -219,6 +223,38 @@ class _ContributorStoresSectionState extends State<ContributorStoresSection> {
                           ),
                         ],
                       ),
+                      Row(
+                        children: [
+                          ElevatedButton(
+                              child: const Text('Edit'),
+                              onPressed: () {
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => StoreFormPage(
+                                          instance: snapshot.data![index])),
+                                );
+                              }),
+                          ElevatedButton(
+                              child: const Text('Delete'),
+                              onPressed: () async {
+                                var response = await request.postJson(
+                                    '${URL.urlLink}stores/delete-mobile',
+                                    jsonEncode(<String, String>{
+                                      'pk': snapshot.data![index].pk.toString(),
+                                    }));
+
+                                if (context.mounted) {
+                                  setState(() =>
+                                      {}); //only to rebuild the stores section
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(SnackBar(
+                                    content: Text(response['description']),
+                                  ));
+                                }
+                              }),
+                        ],
+                      )
                     ],
                   ),
                 ),
