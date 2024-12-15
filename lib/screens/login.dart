@@ -1,7 +1,8 @@
 import 'package:bandung_couture_mobile/constants/url.dart';
 import 'package:bandung_couture_mobile/screens/menu.dart';
 import 'package:bandung_couture_mobile/screens/register.dart';
-import 'package:bandung_couture_mobile/screens/testimony/testimonyPage.dart';
+import 'package:bandung_couture_mobile/screens/testimony/testimony_merchant_page.dart';
+import 'package:bandung_couture_mobile/screens/testimony/testimony_page.dart';
 import 'package:flutter/material.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
@@ -100,11 +101,10 @@ class _LoginPageState extends State<LoginPage> {
                       String username = _usernameController.text;
                       String password = _passwordController.text;
 
-                      // TODO
                       final response =
                           await request.login('${URL.urlLink}auth/login/', {
-                        'username': "Raihan",
-                        'password': "akbar123",
+                        'username': username,
+                        'password': password,
                       });
 
                       if (request.loggedIn) {
@@ -112,11 +112,9 @@ class _LoginPageState extends State<LoginPage> {
                         String uname = response['username'];
                         if (context.mounted) {
                           Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                //TODO:
-                                builder: (context) => const TestimonyPage()),
-                          );
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const HomePage()));
                           ScaffoldMessenger.of(context)
                             ..hideCurrentSnackBar()
                             ..showSnackBar(

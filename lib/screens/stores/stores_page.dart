@@ -164,6 +164,8 @@ class _StoresSectionState extends State<StoresSection> {
                           RatingIcon(
                             storeId: snapshot.data![index].pk,
                             storeName: snapshot.data![index].fields.brand,
+                            description:
+                                snapshot.data![index].fields.description,
                             request: request,
                           ),
                         ]),

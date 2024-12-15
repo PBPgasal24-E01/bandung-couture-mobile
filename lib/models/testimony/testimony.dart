@@ -45,7 +45,7 @@ String numberOfTestimonyToJson(NumberOfTestimony data) =>
     json.encode(data.toJson());
 
 class NumberOfTestimony {
-  int rating;
+  double rating;
   int count;
 
   NumberOfTestimony({
@@ -62,5 +62,42 @@ class NumberOfTestimony {
   Map<String, dynamic> toJson() => {
         "rating": rating,
         "count": count,
+      };
+}
+
+CurrentData currentDataFromJson(String str) =>
+    CurrentData.fromJson(json.decode(str));
+
+String currentDataToJson(CurrentData data) => json.encode(data.toJson());
+
+class CurrentData {
+  bool status;
+  String testimony;
+  double rating;
+  int pk;
+  String user;
+
+  CurrentData({
+    required this.status,
+    required this.testimony,
+    required this.rating,
+    required this.pk,
+    required this.user,
+  });
+
+  factory CurrentData.fromJson(Map<String, dynamic> json) => CurrentData(
+        status: json["status"],
+        testimony: json["testimony"],
+        rating: json["rating"],
+        pk: json["pk"],
+        user: json["user"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "status": status,
+        "testimony": testimony,
+        "rating": rating,
+        "pk": pk,
+        "user": user,
       };
 }

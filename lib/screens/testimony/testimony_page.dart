@@ -1,14 +1,6 @@
-import 'dart:async';
-
-import 'package:bandung_couture_mobile/constants/url.dart';
-import 'package:bandung_couture_mobile/models/stores/store.dart';
 import 'package:bandung_couture_mobile/screens/stores/stores_page.dart';
-import 'package:bandung_couture_mobile/widgets/ratingIcon.dart';
-import 'package:bandung_couture_mobile/widgets/wishlistBtn.dart';
 import 'package:flutter/material.dart';
 import 'package:bandung_couture_mobile/widgets/left_drawer.dart';
-import 'package:pbp_django_auth/pbp_django_auth.dart';
-import 'package:provider/provider.dart';
 
 class TestimonyPage extends StatelessWidget {
   const TestimonyPage({super.key});
