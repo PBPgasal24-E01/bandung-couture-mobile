@@ -1,3 +1,4 @@
+import 'package:bandung_couture_mobile/widgets/ratingIcon.dart';
 import 'package:bandung_couture_mobile/widgets/wishlistBtn.dart';
 import 'package:flutter/material.dart';
 import 'package:bandung_couture_mobile/widgets/left_drawer.dart';
@@ -151,13 +152,21 @@ class _StoresSectionState extends State<StoresSection> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          "${snapshot.data![index].fields.brand}",
-                          style: const TextStyle(
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.bold,
+                        Row(children: [
+                          Text(
+                            "${snapshot.data![index].fields.brand}",
+                            style: const TextStyle(
+                              fontSize: 16.0,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
+                          const SizedBox(width: 4),
+                          RatingIcon(
+                            storeId: snapshot.data![index].pk,
+                            storeName: snapshot.data![index].fields.brand,
+                            request: request,
+                          ),
+                        ]),
                         const SizedBox(height: 8),
                         Text(
                           "${snapshot.data![index].fields.description}",

@@ -3,6 +3,7 @@ import 'package:bandung_couture_mobile/screens/login.dart';
 import 'package:bandung_couture_mobile/screens/menu.dart';
 import 'package:bandung_couture_mobile/screens/pages.dart';
 import 'package:bandung_couture_mobile/screens/stores/stores_page.dart';
+import 'package:bandung_couture_mobile/screens/testimony/testimonyPage.dart';
 import 'package:bandung_couture_mobile/screens/wishlist/wishlistPage.dart';
 import 'package:flutter/material.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
@@ -106,6 +107,19 @@ class LeftDrawer extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                   builder: (context) => const ForumPage(),
+                ),
+              );
+            },
+          ),
+          // Menu Rating
+          ListTile(
+            leading: const Icon(Icons.star_border_outlined),
+            title: const Text('Rating'),
+            onTap: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const TestimonyPage(),
                 ),
               );
             },
