@@ -1,7 +1,7 @@
 import 'package:bandung_couture_mobile/constants/url.dart';
 import 'package:bandung_couture_mobile/models/testimony/testimony.dart';
 import 'package:bandung_couture_mobile/screens/testimony/testimony_form.dart';
-import 'package:bandung_couture_mobile/widgets/left_drawer.dart';
+import 'package:bandung_couture_mobile/screens/testimony/testimony_page.dart';
 import 'package:flutter/material.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
@@ -25,8 +25,16 @@ class TestimonyMerchantPage extends StatelessWidget {
           title: Text("Ulasan Toko $storeName"),
           backgroundColor: Colors.white, // AppBar color
           elevation: 4, // Shadow for AppBar
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const TestimonyPage()),
+              );
+            },
+          ),
         ),
-        drawer: const LeftDrawer(),
         body: Padding(
           padding: const EdgeInsets.fromLTRB(
               25, 25, 25, 25), // Padding for the whole page
