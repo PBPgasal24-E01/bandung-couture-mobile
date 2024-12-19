@@ -1,8 +1,8 @@
 import 'package:bandung_couture_mobile/constants/url.dart';
+import 'package:bandung_couture_mobile/screens/forum/forum.dart';
 import 'package:bandung_couture_mobile/screens/login.dart';
 import 'package:bandung_couture_mobile/screens/menu.dart';
-import 'package:bandung_couture_mobile/screens/pages.dart';
-import 'package:bandung_couture_mobile/screens/forum/forum.dart';
+import 'package:bandung_couture_mobile/screens/promo/promo_page.dart';
 import 'package:bandung_couture_mobile/screens/stores/stores_page.dart';
 import 'package:bandung_couture_mobile/screens/testimony/testimony_page.dart';
 import 'package:bandung_couture_mobile/screens/wishlist/wishlistPage.dart';
