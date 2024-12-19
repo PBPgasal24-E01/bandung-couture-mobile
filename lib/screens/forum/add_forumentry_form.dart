@@ -15,44 +15,39 @@ class _AddForumEntryFormState extends State<AddForumEntryForm> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _detailsController = TextEditingController();
+  late CookieRequest request;
 
-  Future<void> addForumEntry(CookieRequest request) async {
-    final String title = _titleController.text;
-    final String details = _detailsController.text;
+  @override
+  void initState() {
+    super.initState();
+    request = context.read<CookieRequest>();
+  }
 
-    
-    final response = await request.postJson(
-      '${URL.urlLink}forum/add_flutter/',
-      jsonEncode(<String, String>{
-        'title': title,
-        'details': details,
-      })
-    );
+ Future<void> _submitForm() async {
+    if (_formKey.currentState!.validate()) {
+      final data = jsonEncode(<String, dynamic>{
+        'title': _titleController.text,
+        'details': _detailsController.text,
+        'parent': null
+      });
 
+      final response = await request.postJson(
+        '${URL.urlLink}forum/add_flutter/',
+        data,
+      );
 
-    if (context.mounted) {
-        if (response['status'] == 'success') {
-            ScaffoldMessenger.of(context)
-                .showSnackBar(const SnackBar(
-            content: Text("Forum baru berhasil disimpan!"),
-            ));
-            Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => const ForumPage()),
-            );
-        } else {
-            ScaffoldMessenger.of(context)
-                .showSnackBar(const SnackBar(
-                content:
-                    Text("Terdapat kesalahan, silakan coba lagi."),
-            ));
-        }
+      if (response['status'] == 'success') {
+        Navigator.pop(context, true);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to update the forum entry')),
+        );
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final request = context.watch<CookieRequest>();
     return Scaffold(
       appBar: AppBar(
         title: Text('Add Forum Entry'),
@@ -63,38 +58,57 @@ class _AddForumEntryFormState extends State<AddForumEntryForm> {
           key: _formKey,
           child: SingleChildScrollView(
             child: Column(
-            children: <Widget>[
-              TextFormField(
-                controller: _titleController,
-                decoration: InputDecoration(labelText: 'Title'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a title';
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                controller: _detailsController,
-                decoration: InputDecoration(labelText: 'Details'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter details';
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    addForumEntry(request);
-                  }
-                },
-                child: Text('Submit'),
-              )
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                TextFormField(
+                  controller: _titleController,
+                  decoration: const InputDecoration(
+                    labelText: 'Title',
+                    border: OutlineInputBorder(),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter a title';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: _detailsController,
+                  decoration: const InputDecoration(
+                    labelText: 'Details',
+                    border: OutlineInputBorder(),
+                  ),
+                  maxLines: 5,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter details';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 20),
+                Center(
+                  child: ElevatedButton(
+                    onPressed: _submitForm,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.indigo[700],
+                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: const Text(
+                      'Save Changes',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
               ],
-
             ),
   
           ),

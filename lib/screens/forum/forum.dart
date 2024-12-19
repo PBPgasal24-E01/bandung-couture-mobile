@@ -1,11 +1,14 @@
+import 'package:bandung_couture_mobile/screens/forum/details_forum.dart';
 import 'package:flutter/material.dart';
 import 'package:bandung_couture_mobile/widgets/left_drawer.dart';
 import 'package:bandung_couture_mobile/models/forum/forum_entry.dart';
 import 'dart:convert';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
+import 'package:bandung_couture_mobile/screens/forum/details_forum.dart';
 import 'package:bandung_couture_mobile/constants/url.dart';
 import 'package:bandung_couture_mobile/screens/forum/add_forumentry_form.dart';
+import 'package:bandung_couture_mobile/screens/forum/edit_forumentry_form.dart';
 
 class ForumPage extends StatefulWidget {
   const ForumPage({super.key});
@@ -36,6 +39,15 @@ class _ForumPageState extends State<ForumPage> {
     });
   }
 
+  void navigateToDetailsForum(String pk) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => DetailsForumPage(pk: pk,)),
+    ).then((_) {
+      refreshForumEntries();
+    });
+  }
+
   Future<void> refreshForumEntries() async {
     setState(() {
       _forumEntriesFuture = fetchForumEntries(request);
@@ -49,6 +61,7 @@ class _ForumPageState extends State<ForumPage> {
 
     List<Forum> listForum = [];
     for (var d in data) {
+      if (Forum.fromJson(d).fields.parent != "None") continue;
       listForum.add(Forum.fromJson(d));
     }
     return listForum;
@@ -140,11 +153,7 @@ class _ForumPageState extends State<ForumPage> {
                 FutureBuilder<List<Forum>>(
                   future: _forumEntriesFuture,
                   builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const CircularProgressIndicator();
-                    } else if (snapshot.hasError) {
-                      return Text('Error: ${snapshot.error}');
-                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    if (!snapshot.hasData || snapshot.data!.isEmpty) {
                       return const Text('No forum entries found.');
                     } else {
                       List<Forum> forums = snapshot.data!;
@@ -175,8 +184,17 @@ class _ForumPageState extends State<ForumPage> {
                                           children: [
                                             IconButton(
                                               icon: const Icon(Icons.edit, color: Colors.yellow),
-                                              onPressed: () {
-                                                // Implement edit functionality
+                                              onPressed: () async {
+                                                final result = await Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) => EditForumEntryForm(forumEntry: forum),
+                                                  ),
+                                                );
+                                            
+                                                if (result == true) {
+                                                  refreshForumEntries();
+                                                }
                                               },
                                             ),
                                             IconButton(
@@ -198,7 +216,7 @@ class _ForumPageState extends State<ForumPage> {
                                   const SizedBox(height: 8),
                                   GestureDetector(
                                     onTap: () {
-                                      // Implement navigation to forum details
+                                      navigateToDetailsForum(forum.pk);
                                     },
                                     child: Text(
                                       forum.fields.title,
@@ -222,7 +240,7 @@ class _ForumPageState extends State<ForumPage> {
                                     children: [
                                       GestureDetector(
                                         onTap: () {
-                                          // Implement navigation to forum details
+                                          navigateToDetailsForum(forum.pk);
                                         },
                                         child: const Text(
                                           'Read more',
