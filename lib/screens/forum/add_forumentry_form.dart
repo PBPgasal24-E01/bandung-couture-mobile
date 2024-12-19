@@ -1,6 +1,4 @@
-import 'package:bandung_couture_mobile/screens/forum/forum.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:bandung_couture_mobile/constants/url.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
@@ -50,7 +48,7 @@ class _AddForumEntryFormState extends State<AddForumEntryForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Add Forum Entry'),
+        title: const Text('Add Forum Entry'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

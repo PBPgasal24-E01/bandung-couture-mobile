@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:bandung_couture_mobile/models/forum/forum_entry.dart';
 import 'package:bandung_couture_mobile/constants/url.dart';
-import 'package:bandung_couture_mobile/widgets/left_drawer.dart';
 import 'package:bandung_couture_mobile/screens/forum/edit_forumentry_form.dart';
 import 'package:bandung_couture_mobile/screens/forum/edit_commententry_form.dart';
 import 'package:bandung_couture_mobile/models/forum/comment.dart';

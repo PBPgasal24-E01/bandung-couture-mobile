@@ -5,7 +5,6 @@ import 'package:bandung_couture_mobile/models/forum/forum_entry.dart';
 import 'dart:convert';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
-import 'package:bandung_couture_mobile/screens/forum/details_forum.dart';
 import 'package:bandung_couture_mobile/constants/url.dart';
 import 'package:bandung_couture_mobile/screens/forum/add_forumentry_form.dart';
 import 'package:bandung_couture_mobile/screens/forum/edit_forumentry_form.dart';
