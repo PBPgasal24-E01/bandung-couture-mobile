@@ -1,6 +1,8 @@
 import 'package:bandung_couture_mobile/constants/url.dart';
 import 'package:bandung_couture_mobile/screens/menu.dart';
 import 'package:bandung_couture_mobile/screens/register.dart';
+import 'package:bandung_couture_mobile/screens/testimony/testimony_merchant_page.dart';
+import 'package:bandung_couture_mobile/screens/testimony/testimony_page.dart';
 import 'package:flutter/material.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
@@ -110,10 +112,9 @@ class _LoginPageState extends State<LoginPage> {
                         String uname = response['username'];
                         if (context.mounted) {
                           Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const HomePage()),
-                          );
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const HomePage()));
                           ScaffoldMessenger.of(context)
                             ..hideCurrentSnackBar()
                             ..showSnackBar(
