@@ -1,12 +1,11 @@
 import 'package:bandung_couture_mobile/constants/url.dart';
 import 'package:bandung_couture_mobile/models/testimony/testimony.dart';
 import 'package:bandung_couture_mobile/screens/testimony/testimony_form.dart';
-import 'package:bandung_couture_mobile/screens/testimony/testimony_page.dart';
 import 'package:flutter/material.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
 
-class TestimonyMerchantPage extends StatelessWidget {
+class TestimonyMerchantPage extends StatefulWidget {
   final int storeId;
   final String storeName;
   final String description;
@@ -19,19 +18,25 @@ class TestimonyMerchantPage extends StatelessWidget {
   });
 
   @override
+  State<TestimonyMerchantPage> createState() {
+    return _TestimonyMerchantPage();
+  }
+}
+
+class _TestimonyMerchantPage extends State<TestimonyMerchantPage> {
+  @override
   Widget build(BuildContext context) {
+    final request = context.watch<CookieRequest>();
+    var role = request.jsonData['role'];
     return Scaffold(
         appBar: AppBar(
-          title: Text("Ulasan Toko $storeName"),
+          title: Text("Ulasan Toko ${widget.storeName}"),
           backgroundColor: Colors.white, // AppBar color
           elevation: 4, // Shadow for AppBar
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => const TestimonyPage()),
-              );
+              Navigator.pop(context);
             },
           ),
         ),
@@ -42,20 +47,21 @@ class TestimonyMerchantPage extends StatelessWidget {
             children: [
               const SizedBox(height: 10),
               TestimonyHeader(
-                  storeName: storeName,
-                  description: description,
-                  storeId: storeId),
+                  storeName: widget.storeName,
+                  description: widget.description,
+                  storeId: widget.storeId),
               const SizedBox(height: 10),
               Expanded(
                   child: Padding(
                 padding: const EdgeInsets.all(20),
                 child: Column(
                   children: [
-                    CurrentTestimony(
-                      storeId: storeId,
-                      storeName: storeName,
-                      description: description,
-                    ),
+                    if (role == 1)
+                      CurrentTestimony(
+                        storeId: widget.storeId,
+                        storeName: widget.storeName,
+                        description: widget.description,
+                      ),
                     const SizedBox(
                       height: 10,
                     ),
@@ -65,7 +71,7 @@ class TestimonyMerchantPage extends StatelessWidget {
                     ),
                     const SizedBox(height: 10),
                     Expanded(
-                      child: TestimonySection(storeId: storeId),
+                      child: TestimonySection(storeId: widget.storeId),
                     )
                   ],
                 ),
@@ -100,6 +106,8 @@ class _CurrentTestimony extends State<CurrentTestimony> {
     final data = CurrentData.fromJson(response);
     return data;
   }
+
+  Key widgetKey = UniqueKey();
 
   @override
   Widget build(BuildContext context) {
@@ -166,8 +174,8 @@ class _CurrentTestimony extends State<CurrentTestimony> {
                 Row(
                   children: [
                     ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
+                      onPressed: () async {
+                        await Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => TestimonyformPage(
@@ -182,6 +190,10 @@ class _CurrentTestimony extends State<CurrentTestimony> {
                                     rating: snapshot.data!.rating.toString(),
                                   ))),
                         );
+
+                        setState(() {
+                          widgetKey = UniqueKey();
+                        });
                       },
                       style: ElevatedButton.styleFrom(
                         shape: const CircleBorder(),
@@ -199,7 +211,9 @@ class _CurrentTestimony extends State<CurrentTestimony> {
                             '${URL.urlLink}testimony/delete_testimony_flutter/${snapshot.data!.pk}');
 
                         if (context.mounted) {
-                          setState(() {});
+                          setState(() {
+                            widgetKey = UniqueKey();
+                          });
                           SnackBar(
                             content: Text(
                                 '${response['status']}: ${response['message']}'),
@@ -221,8 +235,8 @@ class _CurrentTestimony extends State<CurrentTestimony> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
+                onPressed: () async {
+                  await Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (context) => TestimonyformPage(
@@ -232,6 +246,9 @@ class _CurrentTestimony extends State<CurrentTestimony> {
                               id: widget.storeId,
                             )),
                   );
+                  setState(() {
+                    widgetKey = UniqueKey();
+                  });
                 },
                 style: ElevatedButton.styleFrom(
                   shape: const CircleBorder(),
