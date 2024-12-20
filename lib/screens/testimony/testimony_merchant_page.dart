@@ -24,6 +24,14 @@ class TestimonyMerchantPage extends StatefulWidget {
 }
 
 class _TestimonyMerchantPage extends State<TestimonyMerchantPage> {
+  Key widgetKey = UniqueKey();
+
+  void updateValue(String data) {
+    setState(() {
+      widgetKey = UniqueKey();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final request = context.watch<CookieRequest>();
@@ -61,6 +69,7 @@ class _TestimonyMerchantPage extends State<TestimonyMerchantPage> {
                         storeId: widget.storeId,
                         storeName: widget.storeName,
                         description: widget.description,
+                        onUpdate: updateValue,
                       ),
                     const SizedBox(
                       height: 10,
@@ -86,12 +95,14 @@ class CurrentTestimony extends StatefulWidget {
   final int storeId;
   final String storeName;
   final String description;
+  final void Function(String) onUpdate;
 
   const CurrentTestimony({
     super.key,
     required this.storeId,
     required this.storeName,
     required this.description,
+    required this.onUpdate,
   });
 
   @override
@@ -193,6 +204,7 @@ class _CurrentTestimony extends State<CurrentTestimony> {
 
                         setState(() {
                           widgetKey = UniqueKey();
+                          widget.onUpdate("");
                         });
                       },
                       style: ElevatedButton.styleFrom(
@@ -213,6 +225,7 @@ class _CurrentTestimony extends State<CurrentTestimony> {
                         if (context.mounted) {
                           setState(() {
                             widgetKey = UniqueKey();
+                            widget.onUpdate("");
                           });
                           SnackBar(
                             content: Text(
@@ -248,6 +261,7 @@ class _CurrentTestimony extends State<CurrentTestimony> {
                   );
                   setState(() {
                     widgetKey = UniqueKey();
+                    widget.onUpdate("");
                   });
                 },
                 style: ElevatedButton.styleFrom(
@@ -320,21 +334,25 @@ class _TestimonyHeader extends State<TestimonyHeader> {
           } else {
             return Row(
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(widget.storeName,
-                        textAlign: TextAlign.left,
-                        style: const TextStyle(
-                          fontSize: 40,
-                          fontWeight: FontWeight.bold,
-                        )),
-                    const SizedBox(height: 4),
-                    Text(
-                      widget.description,
-                      textAlign: TextAlign.left,
+                Flexible(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(widget.storeName,
+                            textAlign: TextAlign.left,
+                            style: const TextStyle(
+                              fontSize: 40,
+                              fontWeight: FontWeight.bold,
+                            )),
+                        const SizedBox(height: 4),
+                        Text(
+                          widget.description,
+                          textAlign: TextAlign.left,
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
                 const Spacer(),
                 Column(

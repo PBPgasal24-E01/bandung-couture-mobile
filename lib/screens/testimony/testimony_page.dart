@@ -1,7 +1,7 @@
 import 'package:bandung_couture_mobile/constants/url.dart';
 import 'package:bandung_couture_mobile/models/stores/store.dart';
 import 'package:bandung_couture_mobile/models/testimony/testimony.dart';
-import 'package:bandung_couture_mobile/widgets/ratingIcon.dart';
+import 'package:bandung_couture_mobile/widgets/rating_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:bandung_couture_mobile/widgets/left_drawer.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
