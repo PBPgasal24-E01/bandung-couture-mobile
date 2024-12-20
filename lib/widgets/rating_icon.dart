@@ -1,7 +1,6 @@
 import 'package:bandung_couture_mobile/constants/url.dart';
 import 'package:bandung_couture_mobile/models/testimony/testimony.dart';
 import 'package:bandung_couture_mobile/screens/testimony/testimony_merchant_page.dart';
-import 'package:bandung_couture_mobile/screens/testimony/testimony_page.dart';
 import 'package:flutter/material.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 
@@ -32,6 +31,8 @@ class _RatingIconState extends State<RatingIcon> {
     return rating;
   }
 
+  Key widgetKey = UniqueKey();
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<NumberOfTestimony>(
@@ -41,8 +42,8 @@ class _RatingIconState extends State<RatingIcon> {
           return Text('Error: ${snapshot.error}');
         } else if (snapshot.hasData) {
           return GestureDetector(
-            onTap: () {
-              Navigator.push(
+            onTap: () async {
+              await Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => TestimonyMerchantPage(
@@ -52,6 +53,10 @@ class _RatingIconState extends State<RatingIcon> {
                   ),
                 ),
               );
+
+              setState(() {
+                widgetKey = UniqueKey();
+              });
             },
             child: Row(children: [
               Row(

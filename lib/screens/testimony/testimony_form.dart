@@ -61,9 +61,7 @@ class _TestimonyFormPageState extends State<TestimonyformPage> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            // Define the action to take when the back arrow is pressed
-            Navigator.pop(
-                context); // Example: to go back to the previous screen
+            Navigator.pop(context);
           },
         ),
         backgroundColor: Theme.of(context).colorScheme.primary,
@@ -160,14 +158,15 @@ class _TestimonyFormPageState extends State<TestimonyformPage> {
                               '${response['status']}: ${response['message']}'),
                         ));
                         if (response['status'] == 'success') {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => TestimonyMerchantPage(
-                                        storeName: widget.storeName,
-                                        description: widget.description,
-                                        storeId: widget.id,
-                                      )));
+                          Navigator.pop(context);
+                          // Navigator.push(
+                          //     context,
+                          //     MaterialPageRoute(
+                          //         builder: (context) => TestimonyMerchantPage(
+                          //               storeName: widget.storeName,
+                          //               description: widget.description,
+                          //               storeId: widget.id,
+                          //             )));
                         }
                       }
                     }

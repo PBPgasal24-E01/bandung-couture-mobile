@@ -1,4 +1,4 @@
-import 'package:bandung_couture_mobile/widgets/ratingIcon.dart';
+import 'package:bandung_couture_mobile/widgets/rating_icon.dart';
 import 'package:bandung_couture_mobile/widgets/wishlistBtn.dart';
 import 'package:flutter/material.dart';
 import 'package:bandung_couture_mobile/widgets/left_drawer.dart';
