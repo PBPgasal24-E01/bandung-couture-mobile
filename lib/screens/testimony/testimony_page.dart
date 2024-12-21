@@ -1,94 +1,31 @@
+import 'package:bandung_couture_mobile/constants/url.dart';
+import 'package:bandung_couture_mobile/models/stores/store.dart';
+import 'package:bandung_couture_mobile/models/testimony/testimony.dart';
 import 'package:bandung_couture_mobile/widgets/rating_icon.dart';
-import 'package:bandung_couture_mobile/widgets/wishlistBtn.dart';
 import 'package:flutter/material.dart';
 import 'package:bandung_couture_mobile/widgets/left_drawer.dart';
-import 'package:bandung_couture_mobile/models/stores/store.dart';
-import 'package:bandung_couture_mobile/screens/stores/contributor_stores_page.dart';
-import 'package:bandung_couture_mobile/constants/url.dart';
-import 'package:provider/provider.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
+import 'package:provider/provider.dart';
 
-class StoresPage extends StatelessWidget {
-  const StoresPage({super.key});
+class TestimonyPage extends StatelessWidget {
+  const TestimonyPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final request = context.watch<CookieRequest>();
-    var isContributor = request.jsonData['role'] == 2;
-
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Stores"),
+        title: const Text("Stores Testimony and Rating"),
         backgroundColor: Colors.white, // AppBar color
         elevation: 4, // Shadow for AppBar
       ),
       drawer: const LeftDrawer(),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0), // Padding for the whole page
+      body: const Padding(
+        padding: EdgeInsets.all(16.0), // Padding for the whole page
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Title Section
-            const Text(
-              "Stores",
-              style: TextStyle(
-                fontSize: 24,
-                color: Colors.black87,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 20), // Space between title and button
-
-            if (isContributor)
-              Column(children: [
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    backgroundColor: Colors.black, // Button color
-                  ),
-                  child: const Padding(
-                    padding: EdgeInsets.only(left: 16, right: 16),
-                    child: Text(
-                      "My Stores Contribution",
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const ContributorStoresPage()),
-                    );
-                  },
-                ),
-
-                const SizedBox(height: 30), // Space between button and section
-              ]),
-
-            // Store Section
             Expanded(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.grey[100], // Light background for the section
-                  borderRadius: BorderRadius.circular(10),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
-                      blurRadius: 8,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
-                ),
-                padding: const EdgeInsets.all(16),
-                child: const StoresSection(),
-              ),
-            ),
+              child: TestimonyFilter(),
+            )
           ],
         ),
       ),
@@ -96,21 +33,70 @@ class StoresPage extends StatelessWidget {
   }
 }
 
-class StoresSection extends StatefulWidget {
-  const StoresSection({super.key});
+class TestimonyFilter extends StatefulWidget {
+  const TestimonyFilter({super.key});
 
   @override
-  State<StoresSection> createState() => _StoresSectionState();
+  State<TestimonyFilter> createState() => _TestimonyFilterState();
 }
 
-class _StoresSectionState extends State<StoresSection> {
+class _TestimonyFilterState extends State<TestimonyFilter> {
+  int _rating = 6;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(children: [
+      DropdownButton<String>(
+        value: (_rating == 6 ? 'Semuanya' : _rating.toString()),
+        items: <String>['0', '1', '2', '3', '4', '5', 'Semuanya']
+            .map((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Text(value),
+          );
+        }).toList(),
+        onChanged: (value) {
+          setState(() {
+            if (value == 'Semuanya') {
+              _rating = 6;
+            } else {
+              _rating = int.parse(value!);
+            }
+          });
+        },
+      ),
+      Expanded(
+        child: TestimonySection(rating: _rating),
+      )
+    ]);
+  }
+}
+
+class TestimonySection extends StatefulWidget {
+  final int rating;
+  const TestimonySection({super.key, required this.rating});
+
+  @override
+  State<TestimonySection> createState() => _TestimonySectionState();
+}
+
+class _TestimonySectionState extends State<TestimonySection> {
   Future<List<Store>> fetchStores(CookieRequest request) async {
     final response = await request.get('${URL.urlLink}stores/show-rest-all');
     var data = response;
     List<Store> storesList = [];
     for (var d in data) {
       if (d != null) {
-        storesList.add(Store.fromJson(d));
+        var currentStore = Store.fromJson(d);
+        final response = await request.get(
+            '${URL.urlLink}testimony/get_number_of_rating/${currentStore.pk}/');
+
+        if (context.mounted) {
+          NumberOfTestimony rating = NumberOfTestimony.fromJson(response);
+          if (rating.rating.round() == widget.rating || widget.rating == 6) {
+            storesList.add(currentStore);
+          }
+        }
       }
     }
     return storesList;
@@ -119,21 +105,20 @@ class _StoresSectionState extends State<StoresSection> {
   @override
   Widget build(BuildContext context) {
     final request = context.watch<CookieRequest>();
-    var isVisitor = request.jsonData['role'] == 1;
     return FutureBuilder(
       future: fetchStores(request),
       builder: (context, AsyncSnapshot snapshot) {
         if (snapshot.data == null) {
           return const Center(child: CircularProgressIndicator());
         } else {
-          if (!snapshot.hasData) {
-            return const Column(
+          if (snapshot.data!.length == 0) {
+            return const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
                   'Belum ada toko dalam sistem',
-                  style: TextStyle(fontSize: 20, color: Color(0xff59A5D8)),
+                  style: TextStyle(fontSize: 20),
                 ),
-                SizedBox(height: 8),
               ],
             );
           } else {
@@ -173,6 +158,22 @@ class _StoresSectionState extends State<StoresSection> {
                         Text(
                           "${snapshot.data![index].fields.description}",
                           style: const TextStyle(fontSize: 14.0),
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
+                          children: [
+                            const Icon(Icons.location_on,
+                                size: 14, color: Colors.grey),
+                            const SizedBox(width: 4),
+                            Expanded(
+                              child: Text(
+                                "${snapshot.data![index].fields.address}",
+                                style: const TextStyle(
+                                    fontSize: 12.0, color: Colors.grey),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
                         ),
                         const SizedBox(height: 8),
                         Row(
@@ -221,14 +222,6 @@ class _StoresSectionState extends State<StoresSection> {
                           ],
                         ),
                         const SizedBox(height: 8),
-                        if (isVisitor)
-                          Align(
-                            alignment: Alignment.bottomRight,
-                            child: WishlistButton(
-                              storeId: snapshot.data![index].pk,
-                              request: request,
-                            ),
-                          ),
                       ],
                     ),
                   ),
