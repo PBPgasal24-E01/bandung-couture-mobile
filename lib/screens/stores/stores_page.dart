@@ -39,7 +39,7 @@ class StoresPage extends StatelessWidget {
             ),
             const SizedBox(height: 20), // Space between title and button
 
-            if (true)
+            if (isContributor)
               Column(children: [
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
@@ -173,22 +173,6 @@ class _StoresSectionState extends State<StoresSection> {
                         Text(
                           "${snapshot.data![index].fields.description}",
                           style: const TextStyle(fontSize: 14.0),
-                        ),
-                        const SizedBox(height: 8),
-                        Row(
-                          children: [
-                            const Icon(Icons.location_on,
-                                size: 14, color: Colors.grey),
-                            const SizedBox(width: 4),
-                            Expanded(
-                              child: Text(
-                                "${snapshot.data![index].fields.address}",
-                                style: const TextStyle(
-                                    fontSize: 12.0, color: Colors.grey),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ],
                         ),
                         const SizedBox(height: 8),
                         Row(
