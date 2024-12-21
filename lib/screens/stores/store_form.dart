@@ -55,6 +55,7 @@ class _StoreFormPageState extends State<StoreFormPage> {
       context: context,
       builder: (BuildContext context) {
         return MultiSelect(
+          title: "Select Categories",
           items: names,
           initialItems: initial,
         );
