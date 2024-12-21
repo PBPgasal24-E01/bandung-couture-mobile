@@ -1,6 +1,7 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'package:bandung_couture_mobile/models/testimony/testimony.dart';
-import 'package:bandung_couture_mobile/screens/testimony/testimony_merchant_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
@@ -143,31 +144,48 @@ class _TestimonyFormPageState extends State<TestimonyformPage> {
                           ? '${URL.urlLink}testimony/edit_testimony_flutter/'
                           : '${URL.urlLink}testimony/add_testimony_flutter/';
 
-                      final response = await request.postJson(
-                        url,
-                        jsonEncode(<String, String>{
-                          'testimony': _testimony,
-                          'rating': _rating.toString(),
-                          'store_id': widget.id.toString(),
-                          if (widget.edit) 'pk': widget.instance!.pk.toString()
-                        }),
-                      );
-                      if (context.mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text(
-                              '${response['status']}: ${response['message']}'),
-                        ));
-                        if (response['status'] == 'success') {
-                          Navigator.pop(context);
-                          // Navigator.push(
-                          //     context,
-                          //     MaterialPageRoute(
-                          //         builder: (context) => TestimonyMerchantPage(
-                          //               storeName: widget.storeName,
-                          //               description: widget.description,
-                          //               storeId: widget.id,
-                          //             )));
+                      try {
+                        final response = await request.postJson(
+                          url,
+                          jsonEncode(<String, String>{
+                            'testimony': _testimony,
+                            'rating': _rating.toString(),
+                            'store_id': widget.id.toString(),
+                            if (widget.edit)
+                              'pk': widget.instance!.pk.toString()
+                          }),
+                        );
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text(
+                                '${response['status']}: ${response['message']}'),
+                          ));
+                          print("test-[1]");
+                          if (response['status'] == 'success') {
+                            Navigator.pop(context);
+                            // Navigator.push(
+                            //     context,
+                            //     MaterialPageRoute(
+                            //         builder: (context) => TestimonyMerchantPage(
+                            //               storeName: widget.storeName,
+                            //               description: widget.description,
+                            //               storeId: widget.id,
+                            //             )));
+                          }
                         }
+                      } on TimeoutException {
+                        // Handle timeout specifically
+                        print(
+                            'Request timed out. Please check your internet connection');
+                      } on SocketException {
+                        // Handle no internet connection
+                        print('No internet connection');
+                      } on HttpException catch (e) {
+                        // Handle HTTP errors
+                        print('HTTP error occurred: ${e.message}');
+                      } catch (e) {
+                        // Handle other errors
+                        print('Error occurred: $e');
                       }
                     }
                   },
