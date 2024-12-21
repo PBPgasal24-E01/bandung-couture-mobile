@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 
 class MultiSelect extends StatefulWidget {
+  final String title;
   final List<String> items;
   final List<String> initialItems;
 
   const MultiSelect({
     super.key,
+    required this.title,
     required this.items,
     required this.initialItems,
   });
@@ -42,9 +44,9 @@ class _MultiSelectState extends State<MultiSelect> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text(
-        'Select Categories',
-        style: TextStyle(
+      title: Text(
+        widget.title,
+        style: const TextStyle(
           fontSize: 20,
           fontWeight: FontWeight.bold,
           color: Colors.black,
@@ -105,7 +107,7 @@ class _MultiSelectState extends State<MultiSelect> {
             ),
           ),
           onPressed: _submit,
-          child: const Text('Submit'),
+          child: const Text('Apply'),
         ),
       ],
     );

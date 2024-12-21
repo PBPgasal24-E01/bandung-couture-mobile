@@ -7,9 +7,64 @@ import 'package:bandung_couture_mobile/screens/stores/contributor_stores_page.da
 import 'package:bandung_couture_mobile/constants/url.dart';
 import 'package:provider/provider.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
+import 'package:bandung_couture_mobile/widgets/stores/multi_select.dart';
 
-class StoresPage extends StatelessWidget {
+class StoresPage extends StatefulWidget {
   const StoresPage({super.key});
+
+  @override
+  State<StoresPage> createState() {
+    return _StorePageState();
+  }
+}
+
+class _StorePageState extends State<StoresPage> {
+  List<int> _categories = [];
+
+  void _showMultiSelect() async {
+    final request = Provider.of<CookieRequest>(context, listen: false);
+    final response =
+        await request.get('${URL.urlLink}stores/get-categories-mapping?');
+
+    if (!context.mounted) return;
+
+    final nameToPk = (response['data'] as Map<String, dynamic>)
+        .map((key, value) => MapEntry(key, value as int));
+    final pkToName = (response['inverted_data'] as Map<String, dynamic>)
+        .map((key, value) => MapEntry(int.parse(key), value as String));
+
+    List<String> names = nameToPk.keys.toList();
+    List<String> initial = [];
+
+    for (int categoryPk in _categories) {
+      String? categoryName = pkToName[categoryPk];
+      if (categoryName != null) {
+        initial.add(categoryName);
+      }
+    }
+
+    final List<String>? results = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return MultiSelect(
+          title: "Filter Categories",
+          items: names,
+          initialItems: initial,
+        );
+      },
+    );
+
+    if (results != null) {
+      List<int> categories = [];
+      for (var name in results) {
+        int? pk = nameToPk[name];
+        if (pk != null) categories.add(pk);
+      }
+      setState(() {
+        _categories = categories;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,15 +83,47 @@ class StoresPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Title Section
-            const Text(
-              "Stores",
-              style: TextStyle(
-                fontSize: 24,
-                color: Colors.black87,
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // Title Text
+                  const Text(
+                    "Stores",
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
+
+                  // Filter Button
+                  ElevatedButton.icon(
+                    onPressed: _showMultiSelect,
+                    icon: const Icon(Icons.filter_alt, size: 20),
+                    label: const Text(
+                      "Filter Categories",
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.black,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 12, horizontal: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      elevation: 4, // Shadow effect
+                    ),
+                  ),
+                ],
               ),
-              textAlign: TextAlign.center,
             ),
+
             const SizedBox(height: 20), // Space between title and button
 
             if (isContributor)
@@ -86,7 +173,7 @@ class StoresPage extends StatelessWidget {
                   ],
                 ),
                 padding: const EdgeInsets.all(16),
-                child: const StoresSection(),
+                child: StoresSection(categories: _categories),
               ),
             ),
           ],
@@ -97,7 +184,9 @@ class StoresPage extends StatelessWidget {
 }
 
 class StoresSection extends StatefulWidget {
-  const StoresSection({super.key});
+  final List<int> categories;
+
+  const StoresSection({super.key, required this.categories});
 
   @override
   State<StoresSection> createState() => _StoresSectionState();
@@ -105,7 +194,8 @@ class StoresSection extends StatefulWidget {
 
 class _StoresSectionState extends State<StoresSection> {
   Future<List<Store>> fetchStores(CookieRequest request) async {
-    final response = await request.get('${URL.urlLink}stores/show-rest-all');
+    final response = await request.get(
+        '${URL.urlLink}stores/show-rest-all?categories-filter=${widget.categories.join(',')}');
     var data = response;
     List<Store> storesList = [];
     for (var d in data) {
