@@ -6,6 +6,7 @@ import 'package:bandung_couture_mobile/widgets/left_drawer.dart';
 import 'package:bandung_couture_mobile/constants/url.dart';
 import 'package:bandung_couture_mobile/screens/stores/contributor_stores_page.dart';
 import 'package:bandung_couture_mobile/models/stores/store.dart';
+import 'package:bandung_couture_mobile/widgets/stores/multi_select.dart';
 
 class StoreFormPage extends StatefulWidget {
   final Store? instance;
@@ -20,17 +21,61 @@ class StoreFormPage extends StatefulWidget {
 class _StoreFormPageState extends State<StoreFormPage> {
   final _formKey = GlobalKey<FormState>();
 
-  late String _brand;
-  late String _description;
-  late String _address;
-  late String _contactNumber;
-  late String _website;
-  late String _socialMedia;
+  late String _brand,
+      _description,
+      _address,
+      _contactNumber,
+      _website,
+      _socialMedia;
+  late List<int> _categories;
+
+  void _showMultiSelect() async {
+    final request = Provider.of<CookieRequest>(context, listen: false);
+    final response =
+        await request.get('${URL.urlLink}stores/get-categories-mapping?');
+
+    if (!context.mounted) return;
+
+    final nameToPk = (response['data'] as Map<String, dynamic>)
+        .map((key, value) => MapEntry(key, value as int));
+    final pkToName = (response['inverted_data'] as Map<String, dynamic>)
+        .map((key, value) => MapEntry(int.parse(key), value as String));
+
+    List<String> names = nameToPk.keys.toList();
+    List<String> initial = [];
+
+    for (int categoryPk in _categories) {
+      String? categoryName = pkToName[categoryPk];
+      if (categoryName != null) {
+        initial.add(categoryName);
+      }
+    }
+
+    final List<String>? results = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return MultiSelect(
+          items: names,
+          initialItems: initial,
+        );
+      },
+    );
+
+    if (results != null) {
+      List<int> categories = [];
+      for (var name in results) {
+        int? pk = nameToPk[name];
+        if (pk != null) categories.add(pk);
+      }
+      setState(() {
+        _categories = categories;
+      });
+    }
+  }
 
   @override
   void initState() {
     super.initState();
-
     if (widget.edit) {
       _brand = widget.instance!.fields.brand;
       _description = widget.instance!.fields.description;
@@ -38,9 +83,11 @@ class _StoreFormPageState extends State<StoreFormPage> {
       _contactNumber = widget.instance!.fields.contactNumber;
       _website = widget.instance!.fields.website;
       _socialMedia = widget.instance!.fields.socialMedia;
+      _categories = widget.instance!.fields.categories;
     } else {
       _brand = _description =
           _address = _contactNumber = _website = _socialMedia = "";
+      _categories = [];
     }
   }
 
@@ -50,185 +97,90 @@ class _StoreFormPageState extends State<StoreFormPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Center(
-          child: Text(
-            'Contribute a Store',
-          ),
+        title: const Text(
+          'Contribute a Store',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        foregroundColor: Colors.white,
+        backgroundColor: Colors.black,
+        elevation: 4,
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       drawer: const LeftDrawer(),
-      body: Form(
-        key: _formKey,
-        child: SingleChildScrollView(
-            child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextFormField(
-                initialValue: _brand,
-                decoration: InputDecoration(
-                  hintText: "Brand",
-                  labelText: "Brand",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Title
+              const Text(
+                "Store Details",
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              ),
+              const SizedBox(height: 20),
+
+              // Form Fields
+              _buildTextFormField("Brand", _brand, (value) => _brand = value),
+              _buildTextFormField(
+                  "Description", _description, (value) => _description = value),
+
+              // Multi-Select Button
+              ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.black,
+                  foregroundColor: Colors.white,
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
                   ),
                 ),
-                onChanged: (String? value) {
-                  setState(() {
-                    _brand = value!;
-                  });
-                },
-                validator: (String? value) {
-                  if (value == null || value.isEmpty) {
-                    return "Brand tidak boleh kosong!";
-                  }
-                  return null;
-                },
+                icon: const Icon(Icons.category),
+                label: const Text("Select Categories"),
+                onPressed: _showMultiSelect,
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextFormField(
-                initialValue: _description,
-                decoration: InputDecoration(
-                  hintText: "Description",
-                  labelText: "Description",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                  ),
-                ),
-                onChanged: (String? value) {
-                  setState(() {
-                    _description = value!;
-                  });
-                },
-                validator: (String? value) {
-                  if (value == null || value.isEmpty) {
-                    return "Description tidak boleh kosong!";
-                  }
-                  return null;
-                },
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextFormField(
-                initialValue: _address,
-                decoration: InputDecoration(
-                  hintText: "Address",
-                  labelText: "Address",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                  ),
-                ),
-                onChanged: (String? value) {
-                  setState(() {
-                    _address = value!;
-                  });
-                },
-                validator: (String? value) {
-                  if (value == null || value.isEmpty) {
-                    return "Address tidak boleh kosong!";
-                  }
-                  return null;
-                },
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextFormField(
-                initialValue: _contactNumber,
-                decoration: InputDecoration(
-                  hintText: "Contact Number",
-                  labelText: "Contact Number",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                  ),
-                ),
-                onChanged: (String? value) {
-                  setState(() {
-                    _contactNumber = value!;
-                  });
-                },
-                validator: (String? value) {
-                  if (value == null || value.isEmpty) {
-                    return "Contact number tidak boleh kosong!";
-                  }
-                  return null;
-                },
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextFormField(
-                initialValue: _website,
-                decoration: InputDecoration(
-                  hintText: "Website",
-                  labelText: "Website",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                  ),
-                ),
-                onChanged: (String? value) {
-                  setState(() {
-                    _website = value!;
-                  });
-                },
-                validator: (String? value) {
-                  if (value == null || value.isEmpty) {
-                    return "Website tidak boleh kosong!";
-                  }
-                  return null;
-                },
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextFormField(
-                initialValue: _socialMedia,
-                decoration: InputDecoration(
-                  hintText: "Social Media",
-                  labelText: "Social Media",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                  ),
-                ),
-                onChanged: (String? value) {
-                  setState(() {
-                    _socialMedia = value!;
-                  });
-                },
-                validator: (String? value) {
-                  if (value == null || value.isEmpty) {
-                    return "Social Media tidak boleh kosong!";
-                  }
-                  return null;
-                },
-              ),
-            ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
+              const SizedBox(height: 16),
+
+              _buildTextFormField(
+                  "Address", _address, (value) => _address = value),
+              _buildTextFormField("Contact Number", _contactNumber,
+                  (value) => _contactNumber = value),
+              _buildTextFormField(
+                  "Website", _website, (value) => _website = value),
+              _buildTextFormField("Social Media", _socialMedia,
+                  (value) => _socialMedia = value),
+
+              const SizedBox(height: 30),
+
+              // Save Button
+              Align(
+                alignment: Alignment.center,
                 child: ElevatedButton(
-                  style: ButtonStyle(
-                    backgroundColor: WidgetStateProperty.all(
-                        Theme.of(context).colorScheme.primary),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.black,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 16, horizontal: 32),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                   ),
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
                       String url = widget.edit
                           ? '${URL.urlLink}stores/edit-mobile'
                           : '${URL.urlLink}stores/add-mobile';
-
                       final response = await request.postJson(
                         url,
                         jsonEncode(<String, String>{
                           'brand': _brand,
                           'description': _description,
+                          'categories': _categories.join(','),
                           'address': _address,
                           'contact_number': _contactNumber,
                           'website': _website,
@@ -236,31 +188,46 @@ class _StoreFormPageState extends State<StoreFormPage> {
                           if (widget.edit) 'pk': widget.instance!.pk.toString()
                         }),
                       );
-                      if (context.mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text(
-                              '${response['status']}: ${response['description']}'),
-                        ));
-                        if (response['status'] == 'success') {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    const ContributorStoresPage()),
-                          );
-                        }
+
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text(
+                            '${response['status']}: ${response['description']}'),
+                      ));
+                      if (response['status'] == 'success') {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  const ContributorStoresPage()),
+                        );
                       }
                     }
                   },
-                  child: const Text(
-                    "Save",
-                    style: TextStyle(color: Colors.white),
-                  ),
+                  child: const Text("Save"),
                 ),
               ),
-            ),
-          ],
-        )),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextFormField(
+      String label, String initialValue, Function(String) onChanged) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: TextFormField(
+        initialValue: initialValue,
+        style: const TextStyle(color: Colors.black),
+        decoration: InputDecoration(
+          labelText: label,
+          labelStyle: const TextStyle(color: Colors.black),
+          filled: true,
+          fillColor: Colors.white,
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+        ),
+        onChanged: (value) => onChanged(value),
       ),
     );
   }

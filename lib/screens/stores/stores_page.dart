@@ -147,86 +147,92 @@ class _StoresSectionState extends State<StoresSection> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10), // Rounded corners
                 ),
-                child: Padding(
-                  padding:
-                      const EdgeInsets.all(16.0), // Inner padding for the card
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "${snapshot.data![index].fields.brand}",
-                        style: const TextStyle(
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.bold,
+                child: InkWell(
+                  onTap: () {},
+                  borderRadius: BorderRadius.circular(10),
+                  child: Padding(
+                    padding: const EdgeInsets.all(
+                        16.0), // Inner padding for the card
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "${snapshot.data![index].fields.brand}",
+                          style: const TextStyle(
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        "${snapshot.data![index].fields.description}",
-                        style: const TextStyle(fontSize: 14.0),
-                      ),
-                      const SizedBox(height: 8),
-                      Row(
-                        children: [
-                          const Icon(Icons.location_on,
-                              size: 14, color: Colors.grey),
-                          const SizedBox(width: 4),
-                          Expanded(
-                            child: Text(
-                              "${snapshot.data![index].fields.address}",
-                              style: const TextStyle(
-                                  fontSize: 12.0, color: Colors.grey),
-                              overflow:
-                                  TextOverflow.ellipsis, // Handles long text
+                        const SizedBox(height: 8),
+                        Text(
+                          "${snapshot.data![index].fields.description}",
+                          style: const TextStyle(fontSize: 14.0),
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
+                          children: [
+                            const Icon(Icons.location_on,
+                                size: 14, color: Colors.grey),
+                            const SizedBox(width: 4),
+                            Expanded(
+                              child: Text(
+                                "${snapshot.data![index].fields.address}",
+                                style: const TextStyle(
+                                    fontSize: 12.0, color: Colors.grey),
+                                overflow:
+                                    TextOverflow.ellipsis, // Handles long text
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 8),
-                      Row(
-                        children: [
-                          const Icon(Icons.phone, size: 14, color: Colors.grey),
-                          const SizedBox(width: 4),
-                          Expanded(
-                            child: Text(
-                              "${snapshot.data![index].fields.contactNumber}",
-                              style: const TextStyle(
-                                  fontSize: 12.0, color: Colors.grey),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
+                          children: [
+                            const Icon(Icons.phone,
+                                size: 14, color: Colors.grey),
+                            const SizedBox(width: 4),
+                            Expanded(
+                              child: Text(
+                                "${snapshot.data![index].fields.contactNumber}",
+                                style: const TextStyle(
+                                    fontSize: 12.0, color: Colors.grey),
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 8),
-                      Row(
-                        children: [
-                          const Icon(Icons.web, size: 14, color: Colors.grey),
-                          const SizedBox(width: 4),
-                          Expanded(
-                            child: Text(
-                              "${snapshot.data![index].fields.website}",
-                              style: const TextStyle(
-                                  fontSize: 12.0, color: Colors.blue),
-                              overflow: TextOverflow.ellipsis,
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
+                          children: [
+                            const Icon(Icons.web, size: 14, color: Colors.grey),
+                            const SizedBox(width: 4),
+                            Expanded(
+                              child: Text(
+                                "${snapshot.data![index].fields.website}",
+                                style: const TextStyle(
+                                    fontSize: 12.0, color: Colors.blue),
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 8),
-                      Row(
-                        children: [
-                          const Icon(Icons.share, size: 14, color: Colors.grey),
-                          const SizedBox(width: 4),
-                          Expanded(
-                            child: Text(
-                              "${snapshot.data![index].fields.socialMedia}",
-                              style: const TextStyle(
-                                  fontSize: 12.0, color: Colors.blue),
-                              overflow: TextOverflow.ellipsis,
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
+                          children: [
+                            const Icon(Icons.share,
+                                size: 14, color: Colors.grey),
+                            const SizedBox(width: 4),
+                            Expanded(
+                              child: Text(
+                                "${snapshot.data![index].fields.socialMedia}",
+                                style: const TextStyle(
+                                    fontSize: 12.0, color: Colors.blue),
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
