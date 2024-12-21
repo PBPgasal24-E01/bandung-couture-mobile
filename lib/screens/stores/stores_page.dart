@@ -38,7 +38,7 @@ class StoresPage extends StatelessWidget {
             ),
             const SizedBox(height: 20), // Space between title and button
 
-            if (true)
+            if (isContributor)
               Column(children: [
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
