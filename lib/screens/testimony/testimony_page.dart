@@ -253,6 +253,7 @@ class _TestimonySectionState extends State<TestimonySection> {
   @override
   Widget build(BuildContext context) {
     final request = context.watch<CookieRequest>();
+
     return FutureBuilder(
       future: fetchStores(request),
       builder: (context, AsyncSnapshot snapshot) {
@@ -272,8 +273,6 @@ class _TestimonySectionState extends State<TestimonySection> {
           } else {
             return Column(
               children: [
-                // if (_count == 0)
-                //   Text("Tidak ada toko dengan rating ${widget.rating}"),
                 Expanded(
                   child: ListView.builder(
                     itemCount: snapshot.data!.length,
