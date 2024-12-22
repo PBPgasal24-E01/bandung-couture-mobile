@@ -164,31 +164,33 @@ class _WishlistPageState extends State<WishlistPage> {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 20), // Space between title and button
-            Align(
-              alignment: Alignment.center, // Aligns the button to the center
-              child: ElevatedButton.icon(
-                onPressed: _showMultiSelect,
-                icon: const Icon(Icons.filter_alt, size: 20),
-                label: const Text(
-                  "Filter Categories",
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
+            if (!isContributor) ...[
+              Align(
+                alignment: Alignment.center, // Aligns the button to the center
+                child: ElevatedButton.icon(
+                  onPressed: _showMultiSelect,
+                  icon: const Icon(Icons.filter_alt, size: 20),
+                  label: const Text(
+                    "Filter Categories",
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
-                ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.black,
-                  foregroundColor: Colors.white,
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.black,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 12, horizontal: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    elevation: 4, // Shadow effect
                   ),
-                  elevation: 4, // Shadow effect
                 ),
               ),
-            ),
-            const SizedBox(height: 25),
+              const SizedBox(height: 25),
+            ],
             Expanded(
               child: Container(
                 decoration: BoxDecoration(
