@@ -112,19 +112,6 @@ class LeftDrawer extends StatelessWidget {
               );
             },
           ),
-          // Menu Rating
-          ListTile(
-            leading: const Icon(Icons.star_border_outlined),
-            title: const Text('Rating'),
-            onTap: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const TestimonyPage(),
-                ),
-              );
-            },
-          ),
           // Menu Logout
           ListTile(
             leading: const Icon(Icons.logout),
