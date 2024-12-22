@@ -17,7 +17,7 @@ class WishlistPage extends StatefulWidget {
 class _WishlistPageState extends State<WishlistPage> {
   List<Wishlist> wishlistItems = []; // Wishlist data shared with child widgets
   List<Store> storeItems = [];
-  List<int> _categories = [];
+  List<int> _categories = [-1];
 
   void _showMultiSelect() async {
     final request = Provider.of<CookieRequest>(context, listen: false);
@@ -34,10 +34,14 @@ class _WishlistPageState extends State<WishlistPage> {
     List<String> names = nameToPk.keys.toList();
     List<String> initial = [];
 
-    for (int categoryPk in _categories) {
-      String? categoryName = pkToName[categoryPk];
-      if (categoryName != null) {
-        initial.add(categoryName);
+    if (_categories.contains(-1)) {
+      initial.add("");
+    } else {
+      for (int categoryPk in _categories) {
+        String? categoryName = pkToName[categoryPk];
+        if (categoryName != null) {
+          initial.add(categoryName);
+        }
       }
     }
 
@@ -54,9 +58,13 @@ class _WishlistPageState extends State<WishlistPage> {
 
     if (results != null) {
       List<int> categories = [];
-      for (var name in results) {
-        int? pk = nameToPk[name];
-        if (pk != null) categories.add(pk);
+      if (results.contains("")) {
+        categories.add(-1);
+      } else {
+        for (var name in results) {
+          int? pk = nameToPk[name];
+          if (pk != null) categories.add(pk);
+        }
       }
       setState(() {
         _categories = categories;
@@ -100,8 +108,13 @@ class _WishlistPageState extends State<WishlistPage> {
   }
 
   Future<List<Wishlist>> fetchWishlistItems(CookieRequest request) async {
-    final response = await request.get(
-        '${URL.urlLink}wishlist/view_Mob/?categories-filter=${_categories.join(',')}');
+    bool useQuery = !_categories.contains(-1);
+    String link = '${URL.urlLink}wishlist/view_Mob/';
+    if (useQuery) {
+      link += '?categories-filter=${_categories.join(',')}';
+    }
+
+    final response = await request.get(link);
     List<dynamic> data = response; // Pastikan tipe data di sini
     List<Wishlist> wishList = [];
 
