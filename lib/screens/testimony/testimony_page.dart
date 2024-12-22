@@ -70,7 +70,7 @@ class _CardPageState extends State<CardPage> {
 
       if (context.mounted) {
         NumberOfTestimony rating = NumberOfTestimony.fromJson(response);
-        if (rating.rating.round() == widget.currentRating ||
+        if (rating.rating.round().toInt() == widget.currentRating ||
             widget.currentRating == 6) {
           return true;
         }
