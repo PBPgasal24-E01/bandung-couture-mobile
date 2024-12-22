@@ -19,7 +19,7 @@ class StoresPage extends StatefulWidget {
 }
 
 class _StorePageState extends State<StoresPage> {
-  List<int> _categories = [];
+  List<int> _categories = [-1];
 
   void _showMultiSelect() async {
     final request = Provider.of<CookieRequest>(context, listen: false);
@@ -36,10 +36,14 @@ class _StorePageState extends State<StoresPage> {
     List<String> names = nameToPk.keys.toList();
     List<String> initial = [];
 
-    for (int categoryPk in _categories) {
-      String? categoryName = pkToName[categoryPk];
-      if (categoryName != null) {
-        initial.add(categoryName);
+    if (_categories.contains(-1)) {
+      initial.add("");
+    } else {
+      for (int categoryPk in _categories) {
+        String? categoryName = pkToName[categoryPk];
+        if (categoryName != null) {
+          initial.add(categoryName);
+        }
       }
     }
 
@@ -56,9 +60,13 @@ class _StorePageState extends State<StoresPage> {
 
     if (results != null) {
       List<int> categories = [];
-      for (var name in results) {
-        int? pk = nameToPk[name];
-        if (pk != null) categories.add(pk);
+      if (results.contains("")) {
+        categories.add(-1);
+      } else {
+        for (var name in results) {
+          int? pk = nameToPk[name];
+          if (pk != null) categories.add(pk);
+        }
       }
       setState(() {
         _categories = categories;
@@ -194,8 +202,13 @@ class StoresSection extends StatefulWidget {
 
 class _StoresSectionState extends State<StoresSection> {
   Future<List<Store>> fetchStores(CookieRequest request) async {
-    final response = await request.get(
-        '${URL.urlLink}stores/show-rest-all?categories-filter=${widget.categories.join(',')}');
+    bool useQuery = !widget.categories.contains(-1);
+    String link = '${URL.urlLink}stores/show-rest-all';
+    if (useQuery) {
+      link += '?categories-filter=${widget.categories.join(',')}';
+    }
+
+    final response = await request.get(link);
     var data = response;
     List<Store> storesList = [];
     for (var d in data) {
