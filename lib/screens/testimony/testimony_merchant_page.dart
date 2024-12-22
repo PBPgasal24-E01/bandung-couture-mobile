@@ -161,7 +161,7 @@ class _CurrentTestimony extends State<CurrentTestimony> {
                               ),
                               const Spacer(),
                               Text(
-                                "${snapshot.data!.rating}/5",
+                                "${snapshot.data!.rating.toInt()}/5",
                                 style: const TextStyle(
                                   fontSize: 20.0,
                                   fontWeight: FontWeight.w800,
@@ -198,7 +198,9 @@ class _CurrentTestimony extends State<CurrentTestimony> {
                                     pk: snapshot.data!.pk,
                                     user: snapshot.data!.user,
                                     testimony: snapshot.data!.testimony,
-                                    rating: snapshot.data!.rating.toString(),
+                                    rating: snapshot.data!.rating
+                                        .toInt()
+                                        .toString(),
                                   ))),
                         );
 
@@ -272,13 +274,15 @@ class _CurrentTestimony extends State<CurrentTestimony> {
                 child: const Icon(Icons.add, color: Colors.white),
               ),
               const SizedBox(width: 4),
-              const Text(
-                "Tambahkan ulasan untuk toko ini!",
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w500,
+              const SingleChildScrollView(
+                child: Text(
+                  "Tambahkan ulasan untuk toko ini!",
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
-              ),
+              )
             ],
           );
         }
@@ -305,10 +309,9 @@ class TestimonyHeader extends StatefulWidget {
 
 class _TestimonyHeader extends State<TestimonyHeader> {
   Future<double> getRating(CookieRequest request) async {
-    final userTestimony = await request
+    var userTestimony = await request
         .get('${URL.urlLink}testimony/get_rating/${widget.storeId}');
-
-    double listTestimony = userTestimony["rating"];
+    double listTestimony = userTestimony["rating"].toDouble();
     return listTestimony;
   }
 
