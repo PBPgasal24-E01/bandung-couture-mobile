@@ -1,5 +1,6 @@
 # [Bandung Couture](https://github.com/PBPgasal24-E01/bandung-couture) 
 [![Deploy](https://img.shields.io/badge/Deploy-passing-brightgreen)](link-to-deployment) Check it out [here](http://raihan-akbar-bandungcouture.pbp.cs.ui.ac.id/)
+[Download APK here](https://install.appcenter.ms/orgs/pbpe01/apps/bandungcouture/distribution_groups/public/releases/5)
 
 ## Daftar Isi
 - [Anggota](#anggota-kelompok-e01)
