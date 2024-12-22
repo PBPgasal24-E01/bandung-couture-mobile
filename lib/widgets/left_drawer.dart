@@ -4,7 +4,6 @@ import 'package:bandung_couture_mobile/screens/login.dart';
 import 'package:bandung_couture_mobile/screens/menu.dart';
 import 'package:bandung_couture_mobile/screens/promo/promo_page.dart';
 import 'package:bandung_couture_mobile/screens/stores/stores_page.dart';
-import 'package:bandung_couture_mobile/screens/testimony/testimony_page.dart';
 import 'package:bandung_couture_mobile/screens/wishlist/wishlistPage.dart';
 import 'package:flutter/material.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
@@ -19,11 +18,11 @@ class LeftDrawer extends StatelessWidget {
     return Drawer(
       child: ListView(
         children: [
-          DrawerHeader(
+          const DrawerHeader(
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primary,
+              color: Colors.black,
             ),
-            child: const Column(
+            child: Column(
               children: [
                 Text(
                   'Bandung Couture',
@@ -36,7 +35,7 @@ class LeftDrawer extends StatelessWidget {
                 ),
                 Padding(padding: EdgeInsets.all(8)),
                 Text(
-                  "Manage and track your products here!",
+                  "Your Gateway to Bandung’s Finest Fashion",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 15,
