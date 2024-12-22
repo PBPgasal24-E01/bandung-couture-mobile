@@ -30,20 +30,6 @@ class LoginApp extends StatelessWidget {
   }
 }
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       theme: ThemeData(
-//         useMaterial3: true,
-//         colorScheme: ColorScheme.fromSwatch(
-//           primarySwatch: Colors.black,
-//         ).copyWith(secondary: Colors.deepPurple[400]),
-//       ),
-//       home: const LoginPage(),
-//     );
-//   }
-// }
-
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -60,7 +46,6 @@ class _LoginPageState extends State<LoginPage> {
     final request = context.watch<CookieRequest>();
 
     return Scaffold(
-      // AppBar bisa disesuaikan sesuai kebutuhan, atau dihilangkan jika tidak diperlukan
       appBar: AppBar(
         title: const Text("Login"),
         centerTitle: true,
