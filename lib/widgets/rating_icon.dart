@@ -64,7 +64,7 @@ class _RatingIconState extends State<RatingIcon> {
                   // Change 5 to a smaller number
                   return Center(
                     child: Icon(
-                      index < snapshot.data!.rating.round()
+                      index < snapshot.data!.rating.round().toInt()
                           ? Icons.star
                           : Icons.star_border_outlined,
                       color: Colors.amber,

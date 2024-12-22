@@ -372,7 +372,7 @@ class _TestimonyHeader extends State<TestimonyHeader> {
                         // Change 5 to a smaller number
                         return Center(
                           child: Icon(
-                            index < snapshot.data!.round()
+                            index < snapshot.data!.round().toInt()
                                 ? Icons.star
                                 : Icons.star_border_outlined,
                             color: Colors.amber,
