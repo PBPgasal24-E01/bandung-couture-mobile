@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:bandung_couture_mobile/models/testimony/testimony.dart';
-import 'package:bandung_couture_mobile/screens/testimony/testimony_merchant_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
@@ -61,9 +60,7 @@ class _TestimonyFormPageState extends State<TestimonyformPage> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            // Define the action to take when the back arrow is pressed
-            Navigator.pop(
-                context); // Example: to go back to the previous screen
+            Navigator.pop(context);
           },
         ),
         backgroundColor: Theme.of(context).colorScheme.primary,
@@ -160,14 +157,15 @@ class _TestimonyFormPageState extends State<TestimonyformPage> {
                               '${response['status']}: ${response['message']}'),
                         ));
                         if (response['status'] == 'success') {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => TestimonyMerchantPage(
-                                        storeName: widget.storeName,
-                                        description: widget.description,
-                                        storeId: widget.id,
-                                      )));
+                          Navigator.pop(context);
+                          // Navigator.push(
+                          //     context,
+                          //     MaterialPageRoute(
+                          //         builder: (context) => TestimonyMerchantPage(
+                          //               storeName: widget.storeName,
+                          //               description: widget.description,
+                          //               storeId: widget.id,
+                          //             )));
                         }
                       }
                     }

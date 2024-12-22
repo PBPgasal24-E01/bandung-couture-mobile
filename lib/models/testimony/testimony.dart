@@ -55,7 +55,7 @@ class NumberOfTestimony {
 
   factory NumberOfTestimony.fromJson(Map<String, dynamic> json) =>
       NumberOfTestimony(
-        rating: json["rating"],
+        rating: json["rating"].toDouble(),
         count: json["count"],
       );
 
@@ -88,7 +88,7 @@ class CurrentData {
   factory CurrentData.fromJson(Map<String, dynamic> json) => CurrentData(
         status: json["status"],
         testimony: json["testimony"],
-        rating: json["rating"],
+        rating: json["rating"].toDouble(),
         pk: json["pk"],
         user: json["user"],
       );

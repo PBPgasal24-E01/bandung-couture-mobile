@@ -31,6 +31,8 @@ class _RatingIconState extends State<RatingIcon> {
     return rating;
   }
 
+  Key widgetKey = UniqueKey();
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<NumberOfTestimony>(
@@ -40,8 +42,8 @@ class _RatingIconState extends State<RatingIcon> {
           return Text('Error: ${snapshot.error}');
         } else if (snapshot.hasData) {
           return GestureDetector(
-            onTap: () {
-              Navigator.push(
+            onTap: () async {
+              await Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => TestimonyMerchantPage(
@@ -51,6 +53,10 @@ class _RatingIconState extends State<RatingIcon> {
                   ),
                 ),
               );
+
+              setState(() {
+                widgetKey = UniqueKey();
+              });
             },
             child: Row(children: [
               Row(
@@ -58,7 +64,7 @@ class _RatingIconState extends State<RatingIcon> {
                   // Change 5 to a smaller number
                   return Center(
                     child: Icon(
-                      index < snapshot.data!.rating.round()
+                      index < snapshot.data!.rating.round().toInt()
                           ? Icons.star
                           : Icons.star_border_outlined,
                       color: Colors.amber,

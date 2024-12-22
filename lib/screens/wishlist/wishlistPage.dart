@@ -5,6 +5,7 @@ import 'package:bandung_couture_mobile/widgets/left_drawer.dart';
 import 'package:bandung_couture_mobile/models/Wishlist/wishlist.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
+import 'package:bandung_couture_mobile/widgets/stores/multi_select.dart';
 
 class WishlistPage extends StatefulWidget {
   const WishlistPage({super.key});
@@ -16,6 +17,61 @@ class WishlistPage extends StatefulWidget {
 class _WishlistPageState extends State<WishlistPage> {
   List<Wishlist> wishlistItems = []; // Wishlist data shared with child widgets
   List<Store> storeItems = [];
+  List<int> _categories = [-1];
+
+  void _showMultiSelect() async {
+    final request = Provider.of<CookieRequest>(context, listen: false);
+    final response =
+        await request.get('${URL.urlLink}stores/get-categories-mapping?');
+
+    if (!context.mounted) return;
+
+    final nameToPk = (response['data'] as Map<String, dynamic>)
+        .map((key, value) => MapEntry(key, value as int));
+    final pkToName = (response['inverted_data'] as Map<String, dynamic>)
+        .map((key, value) => MapEntry(int.parse(key), value as String));
+
+    List<String> names = nameToPk.keys.toList();
+    List<String> initial = [];
+
+    if (_categories.contains(-1)) {
+      initial.add("");
+    } else {
+      for (int categoryPk in _categories) {
+        String? categoryName = pkToName[categoryPk];
+        if (categoryName != null) {
+          initial.add(categoryName);
+        }
+      }
+    }
+
+    final List<String>? results = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return MultiSelect(
+          title: "Filter Categories",
+          items: names,
+          initialItems: initial,
+        );
+      },
+    );
+
+    if (results != null) {
+      List<int> categories = [];
+      if (results.contains("")) {
+        categories.add(-1);
+      } else {
+        for (var name in results) {
+          int? pk = nameToPk[name];
+          if (pk != null) categories.add(pk);
+        }
+      }
+      setState(() {
+        _categories = categories;
+        _refreshWishlist(request);
+      });
+    }
+  }
 
   // Function to refresh wishlist data
   Future<void> _refreshWishlist(CookieRequest request) async {
@@ -52,7 +108,13 @@ class _WishlistPageState extends State<WishlistPage> {
   }
 
   Future<List<Wishlist>> fetchWishlistItems(CookieRequest request) async {
-    final response = await request.get('${URL.urlLink}wishlist/view_Mob/');
+    bool useQuery = !_categories.contains(-1);
+    String link = '${URL.urlLink}wishlist/view_Mob/';
+    if (useQuery) {
+      link += '?categories-filter=${_categories.join(',')}';
+    }
+
+    final response = await request.get(link);
     List<dynamic> data = response; // Pastikan tipe data di sini
     List<Wishlist> wishList = [];
 
@@ -115,6 +177,33 @@ class _WishlistPageState extends State<WishlistPage> {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 20), // Space between title and button
+            if (!isContributor) ...[
+              Align(
+                alignment: Alignment.center, // Aligns the button to the center
+                child: ElevatedButton.icon(
+                  onPressed: _showMultiSelect,
+                  icon: const Icon(Icons.filter_alt, size: 20),
+                  label: const Text(
+                    "Filter Categories",
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.black,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 12, horizontal: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    elevation: 4, // Shadow effect
+                  ),
+                ),
+              ),
+              const SizedBox(height: 25),
+            ],
             Expanded(
               child: Container(
                 decoration: BoxDecoration(
