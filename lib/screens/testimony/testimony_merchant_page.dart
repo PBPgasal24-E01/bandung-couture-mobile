@@ -333,6 +333,7 @@ class _TestimonyHeader extends State<TestimonyHeader> {
             );
           } else {
             return Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Flexible(
                   child: SingleChildScrollView(

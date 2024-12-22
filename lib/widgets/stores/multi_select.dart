@@ -1,3 +1,11 @@
+/// MultiSelect interface
+/// > Receives two lists of strings parameters: possible options and initial options
+/// > Returns a list of strings: selected options
+/// > If empty string is given in initial options, indicating that "all" option is initially
+/// selected and no other is selected
+/// > If empty string is returned, indicating that "all" option is returned, and this
+/// is equivalent with the fact that the empty string is the only element in the list
+
 import 'package:flutter/material.dart';
 
 class MultiSelect extends StatefulWidget {
@@ -21,9 +29,23 @@ class _MultiSelectState extends State<MultiSelect> {
 
   void _itemChange(String itemValue, bool isSelected) {
     setState(() {
-      isSelected
-          ? _selectedItems.add(itemValue)
-          : _selectedItems.remove(itemValue);
+      //"" here represents that every category is selected
+      if (itemValue == "") {
+        // If "" (all) is selected, clear other selections
+        if (isSelected) {
+          _selectedItems
+            ..clear()
+            ..add("");
+        } else {
+          _selectedItems.remove("");
+        }
+      } else {
+        // For other items, deselect "" (All) if selected
+        _selectedItems.remove("");
+        isSelected
+            ? _selectedItems.add(itemValue)
+            : _selectedItems.remove(itemValue);
+      }
     });
   }
 
@@ -39,6 +61,10 @@ class _MultiSelectState extends State<MultiSelect> {
   void initState() {
     super.initState();
     _selectedItems = List.from(widget.initialItems);
+    if (_selectedItems.contains("")) {
+      _selectedItems.clear();
+      _selectedItems.add("");
+    }
   }
 
   @override
@@ -60,29 +86,57 @@ class _MultiSelectState extends State<MultiSelect> {
             borderRadius: BorderRadius.circular(10),
           ),
           child: Column(
-            children: widget.items.map((item) {
-              return Card(
+            children: [
+              // Add "All" checkbox at the top
+              Card(
                 elevation: 2,
                 margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: CheckboxListTile(
-                  value: _selectedItems.contains(item),
-                  title: Text(
-                    item,
-                    style: const TextStyle(
+                  value: _selectedItems.contains(""),
+                  title: const Text(
+                    "All",
+                    style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
                   controlAffinity: ListTileControlAffinity.leading,
-                  onChanged: (isChecked) => _itemChange(item, isChecked!),
+                  onChanged: (isChecked) => _itemChange("", isChecked ?? false),
                   activeColor: Colors.black,
                   checkColor: Colors.white,
                 ),
-              );
-            }).toList(),
+              ),
+
+              // Dynamically generate other checkboxes
+              ...widget.items.map((item) {
+                return Card(
+                  elevation: 2,
+                  margin:
+                      const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: CheckboxListTile(
+                    value: _selectedItems.contains(item),
+                    title: Text(
+                      item,
+                      style: const TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    controlAffinity: ListTileControlAffinity.leading,
+                    onChanged: (isChecked) =>
+                        _itemChange(item, isChecked ?? false),
+                    activeColor: Colors.black,
+                    checkColor: Colors.white,
+                  ),
+                );
+              }).toList(),
+            ],
           ),
         ),
       ),
