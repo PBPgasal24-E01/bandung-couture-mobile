@@ -70,21 +70,9 @@ class _ForumPageState extends State<ForumPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.black,
-        iconTheme: const IconThemeData(
-          color: Colors.white,
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: refreshForumEntries,
-          ),
-          const CircleAvatar(
-            backgroundColor: Colors.grey,
-            child: Icon(Icons.person, color: Colors.white),
-          ),
-          const SizedBox(width: 15),
-        ],
+        title: const Text("Forum"),
+        backgroundColor: Colors.white,
+        elevation: 4,
       ),
       drawer: const LeftDrawer(),
       body: RefreshIndicator(

@@ -19,8 +19,11 @@ class LoginApp extends StatelessWidget {
       theme: ThemeData(
         useMaterial3: true,
         colorScheme: ColorScheme.fromSwatch(
-          primarySwatch: Colors.deepPurple,
-        ).copyWith(secondary: Colors.deepPurple[400]),
+          primarySwatch: Colors.grey,
+        ).copyWith(
+          primary: Colors.black,
+          secondary: Colors.black,
+        ),
       ),
       home: const LoginPage(),
     );
@@ -43,7 +46,6 @@ class _LoginPageState extends State<LoginPage> {
     final request = context.watch<CookieRequest>();
 
     return Scaffold(
-      // AppBar bisa disesuaikan sesuai kebutuhan, atau dihilangkan jika tidak diperlukan
       appBar: AppBar(
         title: const Text("Login"),
         centerTitle: true,
@@ -169,14 +171,25 @@ class _LoginPageState extends State<LoginPage> {
                                 builder: (context) => const RegisterPage()),
                           );
                         },
-                        child: Text(
-                          'Belum punya akun? Daftar Sekarang',
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.primary,
-                            fontSize: 16.0,
+                          child: RichText(
+                            text: TextSpan(
+                              text: 'Belum punya akun? ',
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.primary,
+                                fontSize: 16.0,
+                                fontWeight: FontWeight.normal,
+                              ),
+                              children: const [
+                                TextSpan(
+                                  text: 'Daftar Sekarang',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
                     ],
                   ),
                 ),

@@ -230,24 +230,30 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: const Text(
-          'BANDUNG COUTURE',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            letterSpacing: 1.5,
-          ),
+     appBar: AppBar(
+        centerTitle: false, 
+        backgroundColor: Colors.white,
+        elevation: 4,
+        title: Row(
+          children: [
+            ClipOval(
+              child: Image.asset(
+                AppImages.logo,
+                width: 40, // Ukuran logo
+                height: 40,
+                fit: BoxFit.cover,
+              ),
+            ),
+            const SizedBox(width: 8), // Jarak antara logo dan teks
+            const Text(
+              'BANDUNG COUTURE',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                letterSpacing: 1.5,
+              ),
+            ),
+          ],
         ),
-        backgroundColor: Colors.black,
-        iconTheme: const IconThemeData(color: Colors.white),
-        actions: const [
-          CircleAvatar(
-            backgroundColor: Colors.grey,
-            child: Icon(Icons.person, color: Colors.white),
-          ),
-          SizedBox(width: 15),
-        ],
       ),
       drawer: const LeftDrawer(),
       body: isLoading

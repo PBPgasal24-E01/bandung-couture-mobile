@@ -200,36 +200,37 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                     child: const Text('Register'),
                   ),
-               const SizedBox(height: 20), // Spasi antara tombol dan teks
+                  const SizedBox(height: 20), // Spasi antara tombol dan teks
 
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text('Sudah punya akun? '),
-                  GestureDetector(
-                    onTap: () {
-                      // Aksi saat teks "Masuk di Sini" ditekan, misalnya navigasi ke halaman login
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const LoginPage()),
-                      );
-                    },
-                    child: Text(
-                      'Masuk di Sini',
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.primary,
-                        fontWeight: FontWeight.bold,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text('Sudah punya akun? '),
+                      GestureDetector(
+                        onTap: () {
+                          // Aksi saat teks "Masuk di Sini" ditekan, misalnya navigasi ke halaman login
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const LoginPage()),
+                          );
+                        },
+                        child: Text(
+                          'Masuk di Sini',
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.primary,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
-                    ),
+                    ],
                   ),
                 ],
               ),
-            ],
+            ),
           ),
         ),
       ),
-    ),
-    ),
-  );
+    );
   }
 }
