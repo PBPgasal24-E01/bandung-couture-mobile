@@ -44,10 +44,14 @@ class _StoreFormPageState extends State<StoreFormPage> {
     List<String> names = nameToPk.keys.toList();
     List<String> initial = [];
 
-    for (int categoryPk in _categories) {
-      String? categoryName = pkToName[categoryPk];
-      if (categoryName != null) {
-        initial.add(categoryName);
+    if (_categories.contains(-1)) {
+      initial.add("");
+    } else {
+      for (int categoryPk in _categories) {
+        String? categoryName = pkToName[categoryPk];
+        if (categoryName != null) {
+          initial.add(categoryName);
+        }
       }
     }
 
@@ -64,9 +68,14 @@ class _StoreFormPageState extends State<StoreFormPage> {
 
     if (results != null) {
       List<int> categories = [];
-      for (var name in results) {
-        int? pk = nameToPk[name];
-        if (pk != null) categories.add(pk);
+
+      if (results.contains("")) {
+        categories.add(-1);
+      } else {
+        for (var name in results) {
+          int? pk = nameToPk[name];
+          if (pk != null) categories.add(pk);
+        }
       }
       setState(() {
         _categories = categories;
